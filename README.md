@@ -4,7 +4,7 @@ Ajout de la documentation !
 
 
 
-```
+```JavaScript
 var paperScalingRatio = {
     A5: 0.5,
     A4: 1.4,
