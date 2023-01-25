@@ -4,7 +4,7 @@ Ajout de la documentation !
 
 
 
-'''
+```
 var paperScalingRatio = {
     A5: 0.5,
     A4: 1.4,
@@ -20,4 +20,4 @@ let first_page;
 function getPageInfo() {
     pageRatio = Math.pow((0.68), paperScalingRatio["A3"]);
     scaleCSS = ".pageScale{ transform: scale(" + pageRatio + ") }"
-'''
+```
