@@ -1,0 +1,106 @@
+html,
+body {
+    margin: 0px;
+    /* width: 100%; */
+    /* height: 100%; */
+    /* overflow: hidden; */
+}
+
+@font-face {
+    font-family: destra;
+    src: url(./font/destra.otf);
+
+    font-family: futura;
+    src: url(./font/Futura_Heavy_font.ttf);
+
+    font-family: cormorant;
+    src: url(./font/CormorantGaramond-Bold.otf);
+
+    font-family: libreBaskerville;
+    src: url(./font/LibreBaskerville-Bold.ttf);
+
+    font-family: barlow;
+    src: url(./font/Barlow-Regular.otf);
+}
+
+
+@media print {
+    /* @page gabarits de page */
+
+    @page {
+        size: A3;
+        margin: 20mm;
+        background-color: white;
+        marks: crop;
+        bleed: 12mm;
+        font-size: 14px;
+    }
+
+    @page: first {
+        background-color: white;
+        margin: 0;
+    }
+
+    @page: left {
+        /* margin-right: 20mm; */
+    }
+
+    @page: right {
+        /* margin-left: 20mm; */
+    }
+
+    @page: blank {
+        background-color: white;
+    }
+
+
+    /* Modèle de page */
+    /* .intro{
+      page: introduction;
+    }
+  
+    @page introduction{
+      margin: 10mm;
+      background-color: red;
+      @bottom-center{
+  
+      }
+    } */
+
+    .breakPage {
+        content: none;
+        break-after: always;
+    }
+
+    /* p {} */
+/*  */
+    /* ul {} */
+/*  */
+    /* li {} */
+/*  */
+    /* li:before {} */
+/*  */
+    /* h1 {} */
+/*  */
+    /* h2 {} */
+/*  */
+    /* li {} */
+}
+
+.titreBlanc {
+    color: rgba(0, 0, 0, 0);
+    margin-top: 100px;
+}
+
+.titre1 {
+    font-family: destra;
+    text-align: center;
+    display: block;
+    clear: both;
+    width: 100%;
+    align-content: center;
+    margin: 0;
+    color: white;
+    background-color: black;
+    padding: 5% 0 5% 0;
+}

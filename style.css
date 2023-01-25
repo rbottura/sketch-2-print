@@ -1,0 +1,64 @@
+:root {
+    --baseline: 18px;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* body { */
+    /* line-height: var(--baseline); */
+/* } */
+
+h1 {
+    line-height: calc(var(--baseline)*2);
+}
+
+/* p { */
+    /* line-height: var(--baseline); */
+/* } */
+
+/* Ici le style pour l'imprimer */
+@media print {
+
+    /* @page gabarits de page */
+    @page {
+        size: A3;
+        margin: 10mm;
+        marks: crop;
+        bleed: 6mm;
+    }
+
+    @page: left {
+        margin-right: 20mm;
+
+        @bottom-left-corner {
+            content: counter(page);
+            font-size: 30px;
+            text-align: left;
+        }
+    }
+
+    @page: right {
+        margin-left: 20mm;
+    }
+
+    @page: blank {
+        background-color: white;
+    }
+
+    h2 {
+        break-before: always;
+    }
+
+    li {
+        word-break: break-all;
+    }
+
+    span {
+        color: red;
+    }
+}

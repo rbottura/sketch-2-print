@@ -1,0 +1,432 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+body .active-modifier-layer{
+    /* display: block; */
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modifier-layer{
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s;
+}
+
+#contextual-color-overlay{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    pointer-events: none;
+    height: 100%;
+    width: 100vw;
+    box-shadow: inset 0 0 0px 10px rgb(7, 135, 88);
+}
+
+#global-interface{
+    display: block;
+    /* position: absolute; */
+    z-index: 500;
+
+    transition: opacity 0.5s;
+}
+
+.global-interface-hidden{
+    opacity: 0;
+}
+
+.global-interface-visible{
+    opacity: 1;
+}
+
+.dummies{
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 2vh;
+    left: 600px;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    box-sizing: border-box;
+    height: 96vh;
+    width: 460px;
+}
+
+#signal-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin: 3px 0;
+}
+
+#visible-overlay-button{
+    color: black;
+    min-width: 70px;
+}
+
+#page-informations {
+    margin-top: 10px;
+}
+
+#page-informations > p {
+    margin: 3px 3px 3px 6px;
+    font-size: 14px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.layer-button {
+    width: 30px;
+    color: white;
+}
+
+.signal-button {
+    cursor: pointer;
+    line-height: 30px;
+    border: solid rgb(150, 150, 150) 3px;
+    background-color: rgb(196, 196, 196);
+    border-radius: 5px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 4px;
+
+    transition: 0.25s;
+}
+
+.layer-button:hover{
+    background-color: rgb(240, 240, 240);
+    color: black;
+}
+
+.active-layer-signal {
+    /* border: solid rgb(7, 237, 10) 3px; */
+    /* background-color: rgb(7, 135, 88); */
+    border: solid rgb(7, 135, 88) 3px;
+    background-color:rgb(21, 194, 24);
+    color: white;
+    font-weight: 600;
+}
+
+#sketch2print-overlay{
+    border: rgb(132, 132, 132) 1px solid;
+    /* box-shadow: inset 0px 0px 5px 0px rgb(0, 0, 0, 0.8); */
+    padding: 5px;
+    border-radius: 10px;
+    max-width: 250px;
+    position: absolute;
+    top: 25px;
+    left: 25px;
+}
+
+#sketch2print-overlay:hover{
+    opacity: 1;
+}
+
+
+.box-inputs-wrapper {
+    display: flex;
+    position: absolute;
+    z-index: 45;
+    flex-direction: column;
+    max-width: 140px;
+    background-color: rgb(53, 53, 53);
+    color: white;
+    /* font-size: 13px; */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 12px 6px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.35);
+    /* min-height: 220px; */
+    left: 25px;
+    top: 275px;
+}
+
+.item_interface {
+    margin: 4px 6px;
+    padding: 3px 6px;
+    display: flex;
+    justify-items: left;
+    flex-wrap: wrap;
+    /* transition: background-color .5s; */
+}
+
+#name-calque-focus{
+    margin: 8px 0px;
+    padding: 4px;
+    border: dotted white 2px;
+    border-radius: 10px;
+}
+
+.handle {
+    cursor: grab;
+    border: double 6px white;
+    height: 8px;
+    box-sizing: content-box;
+    color: white;
+    padding: 0;
+    /* display: flex; */
+    align-items: center;
+    /* justify-items:end; */
+    line-height: 7px;
+    font-size: 10px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.calqueElem {
+    cursor: pointer;
+    line-height: auto;
+}
+
+#calque-css-style{
+    display: block;
+    position: absolute;
+    z-index: 50;
+    background-color: rgb(53, 53, 53);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px -2px rgba(0, 0, 0, 0.7);
+    /* min-width: 250px; */
+    min-height: 400px;
+    
+    top: 275px;
+    left: 215px;
+}
+
+#head-titre-style-wrapper{
+    color: white;
+    font-size: 11px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin: 5px 2px;
+    border-top: solid white 1px;
+}
+
+.style-btn{
+    cursor: pointer;
+    background-color: rgb(52, 52, 52);
+    border: rgb(145, 145, 145) solid 2px;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+
+    transition: background-color .2s, color .2s;
+    margin: 8px 0px;
+    width: 100%;
+    text-align: center;
+}
+
+input[type="radio" i] {
+    margin: 0 5px 0 0;
+}
+
+.input-sketch-container{
+    display: flex;
+    flex-direction: row;
+    height: 80px;
+    margin: 5px;
+    padding: 8px;
+    border: white 1px solid;
+    border-radius: 5px;
+    color: white;
+    align-items: center;
+    /* justify-content: center; */
+}
+
+.thumbnail-sketches{
+    height: 100%;
+}
+
+.text-handle {
+    cursor: grab;
+    display: block;
+    width: 20px;
+    height: 20px;
+    left: 50px;
+    top: 100px;
+    z-index: 250;
+    background-color: rgba(33, 33, 33, 0.3);
+    border: solid 2px rgb(253, 181, 0);
+    border-radius: 5px;
+    color: white;
+    line-height: 20px;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* content: "+"; */
+    text-align: center;
+}
+
+
+
+#calque-style-selection{
+    padding: 2px;
+    margin: 6px 0px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    max-height: 140px;
+    overflow-y: auto;
+    
+}
+
+.calque-btn {
+    cursor: pointer;
+    background-color: rgb(52, 52, 52);
+    border: rgb(145, 145, 145) solid 2px;
+    color: white;
+    margin: 0px 4px;
+    padding: 5px;
+    border-radius: 5px;
+
+    transition: background-color .2s, color .2s;
+}
+
+.calque-btn:hover{
+    background-color: rgb(48, 70, 70);
+    color: rgb(175, 182, 85);
+}
+
+.style_tag {
+    cursor: pointer;
+    font-size: 10px;
+    color: white;
+    min-width: 150px;
+    background-color: rgb(75, 0, 141);
+    border: 1px solid rgb(255, 255, 255);
+    padding: 4px 6px;
+    margin: 2px 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;   
+}
+
+.calque_tag {
+    cursor: pointer;
+    border: rgba(255, 255, 255, 0.5) 1px solid;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.calque_tag:hover{
+    background-color: rgb(165, 165, 165);
+}
+
+.active_calque_tag {
+    border:rgb(3, 238, 152) solid 1px;
+    background-color: rgb(76, 76, 76);
+}
+
+.active-calque-style {
+    border: rgb(255, 240, 73) solid 2px;
+    background-color: rgb(0, 0, 0);
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 3px;
+}
+
+
+.tagsArea{
+    border: solid rgba(255, 255, 255, 0.15) 1px;
+    border-radius: 5px;
+    padding: 3px 0px;
+    min-width: 80px;
+    min-height: 8px;
+    margin: 4px 0px;
+}
+
+.name-tag-area {
+    margin: 4px;
+    font-size: 18px;
+}
+
+.onscreen_canvas{
+    top: 40px;
+    left: 1050px;
+    z-index: 450;
+    border: solid rgb(21, 0, 255) 2px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    max-height: 655px;
+    max-width: 463px;
+    transition: left 0.5s;
+}
+
+.offscreen_canvas{
+    z-index: 500;
+    left: 1050px;
+    top: 40px;
+    border: solid orangered 2px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    opacity: 0;
+}
+
+.cnvImage{
+    text-align: center;
+    display: block;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    object-fit: contain;
+}
+
+.center_canvas {
+    left: 528px;
+}
+
+#placeCanvas{
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    z-index: 550;
+    background-color: rgba(203, 203, 203, 0.419);
+    border: rgb(131, 131, 131) solid 2px;
+    height: 25px;
+    width: 25px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    left: 1015px;
+    top: 55px;
+
+    transition: background-color .4s, color .4s;
+}
+
+#placeCanvas:hover{
+    background-color: rgb(111, 111, 111);
+    color: white;
+}
+
+#imgFilterWrapper{
+    display: block;
+    position: absolute;
+    z-index: 555;
+    top: 550px;
+    left: 25px;
+    max-width: 300px;
+    border: rgb(115, 115, 115) double 4px;
+    box-sizing: border-box;
+    background-color: rgb(53, 53, 53);
+    border-radius: 10px;
+    color: white;
+    padding: 12px;
+}
+
+#canvasFilters{
+    display: block;
+    margin-top: 8px;
+}
+
+.emptyTag{
+    display: block;
+    height: 0px;
+    padding: 1px;
+    background-color: rgba(169, 169, 169, 0.1);
+}
