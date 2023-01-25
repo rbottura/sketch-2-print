@@ -44,7 +44,7 @@ pagedjs-ignore {
         
         transform-origin: top left;
 
-        transform: scale(0.82);
+        /* transform: scale(0.82); */
         /* margin-left: calc(var(--pagedjs-width)/1.8); */
     }
 

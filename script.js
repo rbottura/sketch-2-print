@@ -58,7 +58,7 @@ function loadScript(src) {
     });
 }
 // const lol = 2;
-var paperScalingRatio = {
+const paperScalingRatio = {
     A5: 0.5,
     A4: 1.4,
     A3: 2.2,

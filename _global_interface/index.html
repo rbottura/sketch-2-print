@@ -30,121 +30,119 @@
         <div id="imgFilterWrapper" class="drag">
             <div id="css-box-handle" class="handle">move</div>
             <style id="canvasFilters" contenteditable>
-                .imgFilter{
+                .imgFilter {
                     filter: blur(1px);
                 }
             </style>
         </div>
         <div id="placeCanvas">&lt;</div>
-                <div id="sketch2print-overlay" class="still-overlay">
-                    <div id="signal-button-wrapper">
-                        <div class="layer-button signal-button" id="text-signal-button">T</div>
-                        <div class="layer-button signal-button active-layer-signal" id="canvas-signal-button">C</div>
-                        <div class="signal-button" name="still" id="visible-overlay-button">Preview</div>
-                    </div>
-                    <div id="page-informations">
-                        <p>Taille : A3</p>
-                        <p>Fond perdu : 6mm</p>
-                        <p>Marques : traits de coupe & fond perdu</p>
-                        <p>
-                            Si l'animation du canvas est en pause, appuez sur la touche "é".
-                        </p>
-                        <p>
-                            Pour sauvegardé l'image, appuyez sur la touche "&".
-                        </p>
-                    </div>
-                </div>
-
-                <div class="modifier-layer" id="text-layer">
-                    <div class="box-inputs-wrapper drag">
-                        <div id="css-box-handle" class="handle">move</div>
-                        <!-- <p id="calqueTagsArea">Calques : </p> -->
-                        <div class="tagsArea" id="calqueTagsArea">
-                        </div>
-                        <div class="item_interface">
-                            <button class="calque-btn" type="button" name="button" onclick="addCalque()">+1</button>
-                            <button class="calque-btn" id="" type="button" onclick="removeCalque()">suppr</button>
-                        </div>
-                    </div>
-
-                    <div id="calque-css-style" class="drag">
-                        <div id="css-box-handle" class="handle">move</div>
-
-                        <p id="name-calque-focus"></p>
-
-                        <div id="css_item_wrapper">
-                            <div class="css_item">
-                                <label for="left_css">X-axis : </label>
-                                <textarea class="calqueCssInput" id="css_left_input" name="left_css" rows="1" cols="15"
-                                    placeholder="25px">25px</textarea>
-                            </div>
-                            <div class="css_item">
-                                <label for="top_css">Y-axis : </label>
-                                <textarea class="calqueCssInput" id="css_top_input" name="top_css" rows="1" cols="15"
-                                    placeholder="25px">25px</textarea>
-                            </div>
-                            <div class="css_item">
-                                <label for="zindex_css">z-index : </label>
-                                <textarea class="calqueCssInput" id="" name="z_css" rows="1" cols="15"
-                                    placeholder="25px">5</textarea>
-                            </div>
-                            <div class="css_item">
-                                <label for="fontSize_css">Font-size : </label>
-                                <textarea class="calqueCssInput" id="" name="fontSize_css" rows="1" cols="15"
-                                    placeholder="60px">80px</textarea>
-                            </div>
-                            <div class="css_item">
-                                <label for="fontFamily_css">Font-family : </label>
-                                <textarea class="calqueCssInput" id="" name="fontFamily_css" rows="1"
-                                    cols="15">arial</textarea>
-                            </div>
-                            <div class="css_item">
-                                <label for="colorTxt">Text color : </label>
-                                <input type="color" class="calqueCssInput" id="" name="colorTxt" value="#e66465">
-                            </div>
-                            <div class="css_item">
-                                <label for="colorBckTxt">Highlight color : </label>
-                                <input type="color" class="calqueCssInput" id="" name="colorBckTxt" value="#e66465">
-                            </div>
-                        </div>
-
-                        <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new style below</button>
-                        <!-- <button id="showTitreStyles" type="button" name="btnCSS" onclick="showTitreStyles()"> + </button> -->
-                        <div id="titre-styles-wrapper">
-                            <p id="head-titre-style-wrapper">styles de calque sauvegardés :</p>
-                            <div id="calque-style-selection">
-
-                            </div>
-                        </div>
-                        <div id="saved-style-settings">
-                            <button class="style-btn" type="button"
-                                onclick="modifyCurrentStyle()">save inputs in selected style</button>
-                        </div>
-                    </div>
-                    <!-- FIN input titre -->
-
-                    <!-- DEBUT input infos -->
-                    <!-- <div class="box-inputs-wrapper drag"> -->
-                    <!-- <div class="handle">move</div> -->
-                    <!-- </div> -->
-                </div>
-
-                <div class="modifier-layer active-modifier-layer" id="canvas-layer">
-                    <div class="box-inputs-wrapper drag" id="input-items-sketches">
-                        <div class="handle">move</div>
-                        <p class="name-tag-area">Sketches : </p>
-                        <div class="tagsArea" id="sketchesTagsArea"></div>
-                    </div>
-                </div>
-
+        <div id="sketch2print-overlay" class="still-overlay">
+            <div id="signal-button-wrapper">
+                <div class="layer-button signal-button" id="text-signal-button">T</div>
+                <div class="layer-button signal-button active-layer-signal" id="canvas-signal-button">C</div>
+                <div class="signal-button" name="still" id="visible-overlay-button">Preview</div>
+            </div>
+            <div id="page-informations">
+                <p>Taille : A3</p>
+                <p>Fond perdu : 6mm</p>
+                <p>Marques : traits de coupe & fond perdu</p>
+                <p>
+                    Si l'animation du canvas est en pause, appuez sur la touche "é".
+                </p>
+                <p>
+                    Pour sauvegardé l'image, appuyez sur la touche "&".
+                </p>
+            </div>
         </div>
 
-        <script src="./altSketches.js"></script>
-        <script src="./getHtml.js"></script>
-        <script src="./classes.js"></script>
-        <!-- <script src="./global_ui.js"></script> -->
-        <script src="./gui.js"></script>
-        <script src="./sketch1/sketch.js"></script>
+        <div class="modifier-layer" id="text-layer">
+            <div class="box-inputs-wrapper drag">
+                <div id="css-box-handle" class="handle">move</div>
+                <!-- <p id="calqueTagsArea">Calques : </p> -->
+                <div class="tagsArea" id="calqueTagsArea">
+                </div>
+                <div class="item_interface">
+                    <button class="calque-btn" type="button" name="button" onclick="addCalque()">+1</button>
+                    <button class="calque-btn" id="" type="button" onclick="removeCalque()">suppr</button>
+                </div>
+            </div>
+
+            <div id="calque-css-style" class="drag">
+                <div id="css-box-handle" class="handle">move</div>
+
+                <p id="name-calque-focus"></p>
+
+                <div id="css_item_wrapper">
+                    <div class="css_item">
+                        <label for="left_css">X-axis : </label>
+                        <textarea class="calqueCssInput" id="css_left_input" name="left_css" rows="1" cols="15"
+                            placeholder="25px">25px</textarea>
+                    </div>
+                    <div class="css_item">
+                        <label for="top_css">Y-axis : </label>
+                        <textarea class="calqueCssInput" id="css_top_input" name="top_css" rows="1" cols="15"
+                            placeholder="25px">25px</textarea>
+                    </div>
+                    <div class="css_item">
+                        <label for="zindex_css">z-index : </label>
+                        <textarea class="calqueCssInput" id="" name="z_css" rows="1" cols="15"
+                            placeholder="25px">5</textarea>
+                    </div>
+                    <div class="css_item">
+                        <label for="fontSize_css">Font-size : </label>
+                        <textarea class="calqueCssInput" id="" name="fontSize_css" rows="1" cols="15"
+                            placeholder="60px">80px</textarea>
+                    </div>
+                    <div class="css_item">
+                        <label for="fontFamily_css">Font-family : </label>
+                        <textarea class="calqueCssInput" id="" name="fontFamily_css" rows="1" cols="15">arial</textarea>
+                    </div>
+                    <div class="css_item">
+                        <label for="colorTxt">Text color : </label>
+                        <input type="color" class="calqueCssInput" id="" name="colorTxt" value="#e66465">
+                    </div>
+                    <div class="css_item">
+                        <label for="colorBckTxt">Highlight color : </label>
+                        <input type="color" class="calqueCssInput" id="" name="colorBckTxt" value="#e66465">
+                    </div>
+                </div>
+
+                <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new style
+                    below</button>
+                <!-- <button id="showTitreStyles" type="button" name="btnCSS" onclick="showTitreStyles()"> + </button> -->
+                <div id="titre-styles-wrapper">
+                    <p id="head-titre-style-wrapper">styles de calque sauvegardés :</p>
+                    <div id="calque-style-selection">
+
+                    </div>
+                </div>
+                <div id="saved-style-settings">
+                    <button class="style-btn" type="button" onclick="modifyCurrentStyle()">save inputs in selected
+                        style</button>
+                </div>
+            </div>
+            <!-- FIN input titre -->
+
+            <!-- DEBUT input infos -->
+            <!-- <div class="box-inputs-wrapper drag"> -->
+            <!-- <div class="handle">move</div> -->
+            <!-- </div> -->
+        </div>
+
+        <div class="modifier-layer active-modifier-layer" id="canvas-layer">
+            <div class="box-inputs-wrapper drag" id="input-items-sketches">
+                <div class="handle">move</div>
+                <p class="name-tag-area">Sketches : </p>
+                <div class="tagsArea" id="sketchesTagsArea"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="./altSketches.js"></script>
+    <script src="./classes.js"></script>
+    <script src="./gui.js"></script>
+    <script src="./sketch1/sketch.js"></script>
 </body>
 
 </html>
