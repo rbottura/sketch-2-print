@@ -50,7 +50,7 @@ La ligne suivante permets très grossièrement de placer le centre vertical du d
 
 ### Gestion des objets avec interface HTML
 
-Paged.js, au chargement, écrase tout le contenu du body pour appliquer avec soin tous les paramétrages nécessaires à l'affichage du document. Il est donc impossible (ou je ne sais pas comment faire) de "hardcoder" une interface HTML dans le document de travail.
+Paged.js, au chargement, écrase tout le contenu du body pour appliquer avec soin tous les paramètres nécessaires à l'affichage du document. Il est donc impossible (ou je ne sais pas comment faire) de "hardcoder" une interface HTML dans le document de travail.
 Je décide de passer par un second document, pour l'instant nommé "global_interface".
 Un autre ensemble de fichiers html, css et js concentrés sur la création et la manipulation des futurs éléments affichés et modifiables.
 Heuresement pour moi, les requêtes XML, que j'emploie avec l'API Fetch, peuvent parfaitement récupérer des données textes du format .html ou .css .
@@ -102,7 +102,7 @@ function displayInterface(html, css) {
 ```
 
 J'en profite également pour insérer les script de l'interface à l'ensemble.
-NB : gui.js contient l'ensemble des fonctions de gestions des objets et l'actualisation des données par évènements. 
+NB : gui.js contient l'ensemble des fonctions de gestions des objets et l'actualisation des données par évènements.  
 classes.js contient les déclarations des constructeurs d'objets pour les calques, les styles de calques et la poignée de déplacement.
 altSketches.js est un script temporaire créer dans le but de tester différentes manières de gérer des instances de sketch p5.
 
@@ -110,7 +110,7 @@ altSketches.js est un script temporaire créer dans le but de tester différente
 
 
 
-Le bloc de code ci-dessous vient attraper l'évènement window.print avant et après son appel. L'évènement beforeprint prévient de l'apparition de l'interface (global_interface) sur le document imprimable au moment de son téléchargement en .pdf en cachant tous les blocs html superflux, et en désactivant le scaling initialement appliqué. L'évènement vient afterprint vient tout simplement ré-appliquer ce qui venait d'être modifier pour l'impression et ainsi repasser en mode travail.
+Le bloc de code ci-dessous vient attraper l'évènement window.print avant et après son appel. L'évènement beforeprint prévient de l'apparition de l'interface (global_interface) sur le document imprimable au moment de son téléchargement en .pdf en cachant tous les blocs html superflux, et en désactivant le scaling initialement appliqué. L'évènement afterprint vient tout simplement ré-appliquer ce qui venait d'être modifier pour l'impression et ainsi repasser en mode travail.
 
 ```js
 addEventListener("beforeprint", () => {
