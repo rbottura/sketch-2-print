@@ -1,4 +1,4 @@
-## sketch-2-print
+## sketch-2-print v0.8.1
 
 Dans l'état actuel des choses, le site est pensé pour la gestion d'un document d'une seule et unique page d'un format prédéfini.
 Cela ne veut pas dire qu'il n'est pas en projet d'exploiter la capacité inhérente à paged.js de créer un document à plusieurs pages, avec un format à définir dans une boite de dialogue précédant l'interface principale.
@@ -101,9 +101,9 @@ function displayInterface(html, css) {
 }
 ```
 
-J'en profite également pour insérer les script de l'interface à l'ensemble.
+J'en profite également pour insérer les script de l'interface à l'ensemble.  
 NB : gui.js contient l'ensemble des fonctions de gestions des objets et l'actualisation des données par évènements.  
-classes.js contient les déclarations des constructeurs d'objets pour les calques, les styles de calques et la poignée de déplacement.
+classes.js contient les déclarations des constructeurs d'objets pour les calques, les styles de calques et la poignée de déplacement.  
 altSketches.js est un script temporaire créer dans le but de tester différentes manières de gérer des instances de sketch p5.
 
 
@@ -126,4 +126,116 @@ addEventListener("afterprint", () => {
     
     showCnvElements(true)
 })
+```
+
+
+
+### La poignée de déplacement
+
+Comment déplacer un élément éditable avec un drag and drop sans passer par une librairie ? 
+
+La solution la plus efficace que j'ai pu imaginer est de créer un élément extérieur à tous les calques. Une div complétement indépendante intrégrer dans un objet appelé "textHandle" et qui intègre deux fonctions propres : moveTo() et dragObj(). Ces fontions ont pour objectif de stocker dans une variable local l'élément DOM (un calque) qu'on souhaiterai modifier : object_handled; pour ensuite déplacer l'objet poignée du DOM en haut à gauche de l'objet calque sélectionner, placer ici en paramètre au moment de l'appelle de la fonction. Enfin dragObj() prend en paramètres les valeurs de positions du curseur dans la page pour les affecter aux propriétés left et top, à la fois de la poignée et du calque sélectionner.
+
+
+```js
+class textHandle {
+    constructor(){
+        this.handleObj = document.createElement("div")
+        this.handleObj.id = "textHandle";
+        this.handleObj.innerHTML = "M";
+        this.handleObj.style.position = "absolute";
+        this.handleObj.style.left = "0px";
+        this.handleObj.style.top = "0px";
+        this.handleObj.classList.add("text-handle");
+        document.body.appendChild(this.handleObj)
+
+        this.object_handled;
+        this.objLeft;
+        this.objTop;
+    }
+    moveTo(elem){
+        this.object_handled = elem;
+
+        this.objLeft = (((parseInt(window.getComputedStyle(this.object_handled).left) * pageRatio) + offsetPagePositionX) - offsetHandleSize) + "px";
+        this.objTop = (((parseInt(window.getComputedStyle(this.object_handled).top) * pageRatio) + offsetPagePositionY) - offsetHandleSize) + "px";
+
+        this.handleObj.style.left = this.objLeft; 
+        this.handleObj.style.top = this.objTop; 
+    }
+    dragObj(mx, my){
+        this.handleObj.style.left = mx - offsetHandleSize + "px"
+        this.handleObj.style.top = my - offsetHandleSize + "px"
+
+        this.object_handled.style.left = (mx - offsetPagePositionX) * scalingFactor + "px"; 
+        this.object_handled.style.top = (my - offsetPagePositionY) * scalingFactor + "px";
+
+        updateDisplayPosition(this.object_handled.style.left, this.object_handled.style.top)
+    }
+
+}
+
+let txtHandle = new textHandle();
+```
+
+Passer la valeur de la propriété userSelect à "none" évite le phénomène de sélection du texte qui pourrait être survolé lors du déplacement d'un calque et éviter certaines complications. La varible dragTxt contient un simple booléen confirmant ou non l'appuie sur la poignée et le maintient de celle-ci.
+
+```js
+document.addEventListener("mousemove", (e) => {
+    if (dragTxt) {
+        document.body.style.userSelect = "none";
+        let mouseX = e.clientX
+        let mouseY = e.clientY
+        txtHandle.dragObj(mouseX, mouseY);
+    } else {
+        document.body.style.userSelect = "auto";
+    }
+})
+```
+
+
+
+Pour comprendre le mode d'instanciation de p5.js, je me réfèrerai à la documentation disponible sur le site de la librairie. Mais en quelques mots, p5.js dans sa syntaxe "classique" créer et gère qu'un seul canvas dans la page.
+Le mode d'instanciation permets de mutiplier ce paradigme autant de fois qu'il est nécessaire. Dans mon cas, je décide de créer deux instances p5 pour gérer l'optimisation des performances d'affichage à l'écran. Une première instance est visbible et a une densité de pixel identique à celle de l'écran. Et une deuxième qui est tout de même présente dans le DOM en display: block mais à opacité: 0 (afin de gérer les évènements liés au curseur) possède une densité de pixel dix fois supérieur à la première instance.  
+Dans le cas de la création d'un document A3, un canvas de 463px / 655px devrait être multiplié par 8 pour obtenir une densité équivalente à une taille A3 en 300ppi.
+
+```js
+let listSketches = [];
+
+loadSketch()
+function loadSketch() {
+    let pxlDensity = [1, 10];
+ 
+    for (let i = 0; i < 2; i++) {
+        listSketches[i] = p => {
+            p.setup = function (){
+                p.createCanvas(width, height, (P2D || WEBGL))
+                p.pixelDensity(pxlDensity[i])
+            }
+        }
+    }      
+}
+
+const PaperSizes = {
+    A5: {
+        width: 1754,
+        height: 2480
+    },
+    A4: {
+        width: 2480,
+        height: 3508
+    },
+    A3: {
+        width: 3508,
+        height: 4960
+    },
+    A2: {
+        width: 4960,
+        height: 7016
+    },
+    A1: {
+        width: 7016,
+        height: 9920
+    }
+}
+
 ```
