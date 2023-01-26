@@ -135,6 +135,7 @@ addEventListener("afterprint", () => {
   
 La solution la plus efficace que j'ai pu imaginer est de créer un élément extérieur à tous les calques. Une div complétement indépendante intrégrer dans un objet appelé "textHandle" et qui intègre deux fonctions propres : **moveTo()** et **dragObj()**. Ces fonctions ont pour objectif de stocker dans une variable local l'élément DOM (un calque) qu'on souhaiterai modifier : **object_handled**; pour ensuite déplacer l'objet poignée du DOM en haut à gauche de l'objet calque sélectionner, placer ici en paramètre au moment de l'appelle de la fonction. Enfin **dragObj()** prend en paramètres les valeurs de positions du curseur dans la page pour les affecter aux propriétés left et top, à la fois de la poignée et du calque sélectionner.
 
+![](./doc_img/handle.png)
 
 ```js
 class textHandle {
