@@ -1,4 +1,17 @@
-# sketch-2-print v0.8.1
+# sketch-2-print v0.8.2
+
+**Sketch-2-print** vise à être une application web permettant d'utiliser à la fois la librairie **paged.js** pour les fonctionnalités de mise en page et l'option de télécharger un document pdf prêt pour l'impression, et tout autre librairies javascript, ou API, susceptible d'intervenir dans un espace de travail pour objets imprimés, comme **p5.js** pour générer du contenu graphique, **D3.js** pour manipuler des set de données complexes et matérialisable, **rythme.js** pour faire de l'édition d'un livre un jeu de rythme, une expérience musicales, etc.
+
+### En Réseau
+
+J'ai comme projet d'utiliser [Tangle (WASM)](https://github.com/kettle11/tangle) pour permettre la collaboratin instanté en ligne sur un même document de travail.
+
+### Aperçu au 07.03.23
+
+![oue](./doc_img/ui(2).png)
+![oue](./doc_img/ui(3).png)
+![oue](./doc_img/ui(4).png)
+
 
 Dans l'état actuel des choses, le site est pensé pour la gestion d'un document d'une seule et unique page d'un format prédéfini.
 Cela ne veut pas dire qu'il n'est pas en projet d'exploiter la capacité inhérente à paged.js de créer un document à plusieurs pages, avec un format à définir dans une boite de dialogue précédant l'interface principale, mais cela n'arrivera pas avant la 1.0 ou la 1.1.

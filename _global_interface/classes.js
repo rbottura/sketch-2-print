@@ -28,6 +28,8 @@ let listStyles = [];
 
 const listFonts = ["tahoma", "arial"]
 
+const ptNbr = 2;
+
 const pageDummy = document.querySelectorAll(".pagedjs_area")[0];
 console.log(pageDummy)
 
@@ -52,7 +54,11 @@ class Calque {
         this.pageElem.classList.add("calqueElem");
         // this.pageElem.style.zIndex =
         this.pageElem.name = this.calqueIndex;
-        this.pageElem.innerHTML = "calque" + this.calqueIndex;
+        // this.pageElem.innerHTML = "calque" + this.calqueIndex;
+        
+        // pour édition critérium
+        this.pageElem.innerHTML = "Critérium";
+        
         this.pageElem.contentEditable = true;
 
         listCalques.push(this.pageElem)

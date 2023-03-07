@@ -7,12 +7,20 @@ function loadSkt2() {
     let pxlDensity = [1, 15];
     for (let i = 0; i < 2; i++) {
         listSkt2[i] = p => {
-
+            let listModels = []
+            let listPenParts = []
             p.preload = function () {
                 console.log('preloaddddd')
-                let newObj = p.loadModel('./_global_interface/assets/obj1.obj', true)
+                //for (let i = 1; i < 18; i++) {
+                //    let Obj = p.loadModel('./_global_interface/assets/newPen_(' + i + ').obj', false)
+                //    listModels.push(Obj)
+                //    let newPenObj = new PenPart(0, 0, 1580, 1, 1, Obj)
+                //    listPenParts.push(newPenObj)
+                //    console.log(Obj)
+                //}
+                let newObj = p.loadModel('./_global_interface/assets/newPen_(' + ptNbr + ').obj', true)
                 let newPenPart = new PenPart(0, 0, -100, 1, 1, newObj)
-                console.log(newPenPart)
+
                 penParts.push(newPenPart);
             }
 
@@ -35,13 +43,17 @@ function loadSkt2() {
                     p.translate(this.x, this.y, this.z)
                     // p.rotateX(.6)
                     p.scale(this.scale)
-                    p.stroke(255, 180, 23)
+                    p.stroke(p.color("black"))
                     p.noFill();
+                    // p.fill(p.color("rgba(128,255,128,.1)"))
                     // p.ambientMaterial(p.color("white"))
                     // p.specularMaterial(255)
-                    p.strokeWeight(1 * (pxlDensity[i] / 2))
-                    // p.model(this.obj)
-                    p.box(50, 72, 120)
+                    p.translate(-10, 20, 0)
+                    p.rotateY(.6)
+                    p.rotateX(.8)
+                    p.strokeWeight(pxlDensity[i] / 8)
+                    p.model(this.obj)
+                    // p.box(50, 72, 120)
                     p.pop()
                     // p.randomSeed(100)
                 }
@@ -63,12 +75,16 @@ function loadSkt2() {
             };
 
             p.draw = function () {
-                p.background(p.color("transparen"));
+                p.background(p.color("transparent"));
 
                 p.lights()
 
                 penParts[0].z = p.mouseX * 5;
 
+                //for(const elem of listPenParts){
+                //    elem.show()
+                //}
+                
                 penParts[0].show()
 
                 if (!showCanvas) stopCanvas()
@@ -109,7 +125,7 @@ function loadSketchMatter() {
             Render = Matter.Render,
             Runner = Matter.Runner,
             Bodier = Matter.Bodies
-            Composite = Matter.Composite;
+        Composite = Matter.Composite;
 
         let engine;
         let render;
@@ -138,6 +154,10 @@ function loadSketchMatter() {
 
         p.draw = function () {
             p.background(p.color("green"))
+        }
+
+        p.mousePressed = function () {
+
         }
 
     }

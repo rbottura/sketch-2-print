@@ -3,13 +3,20 @@ console.log("gui loading")
 function loadDefStyles() {
     let randomX = Math.floor(getRandomArbitrary(-100, 100) + 100) + "px";
     let randomY = Math.floor(getRandomArbitrary(-200, 200) + 200) + "px";
+    let posX = 530 + "px";
+    // let posY = (globalStyleIndex * 65) + "px";
+    let posY = 1541 + "px";
 
     let randomTextColor = "#" + Math.trunc(Math.random() * 16777215).toString(16);
-    console.log("lenght color : "+ randomTextColor.length)
     if(randomTextColor.length == 6){randomTextColor += "0"}
+    let txtColor = "black";
+
     let randomBckColor = "#" + Math.trunc(Math.random() * 16777215).toString(16);
     if(randomBckColor.length == 6){randomBckColor += "0"}
-    let newStyle = new CalqueStyle(randomX, randomY, 500, "60px", "arial", randomTextColor, randomBckColor);
+    let bckColor = "none"
+
+    // let newStyle = new CalqueStyle(randomX, randomY, 500, "60px", "arial", randomTextColor, randomBckColor);
+    let newStyle = new CalqueStyle(posX, posY, 500, "22px", "garamond", txtColor, bckColor);
 
     listDefStyles.push(newStyle);
     listStyles.push(newStyle);
@@ -29,7 +36,7 @@ function preloadStyles(nbr) {
 function loadDefCalque() {
     console.log("load claque")
     // let randomStyle = Math.trunc(Math.random() * 8);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
         console.log(i)
         let newCalque = new Calque(listDefStyles[i]);
         listDefCalquesObj.push(newCalque)
