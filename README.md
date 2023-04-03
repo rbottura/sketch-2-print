@@ -264,3 +264,5 @@ const PaperSizes = {
 }
 
 ```
+
+Attention, il faut savoir que cette version est déjà obselète alors qu'elle n'est pas fini d'être publié, j'anticipe une réécriture presque complète avec un framework comme vue.js ou nuxt.js.

@@ -10,15 +10,9 @@ function loadSkt2() {
             let listModels = []
             let listPenParts = []
             p.preload = function () {
-                console.log('preloaddddd')
-                //for (let i = 1; i < 18; i++) {
-                //    let Obj = p.loadModel('./_global_interface/assets/newPen_(' + i + ').obj', false)
-                //    listModels.push(Obj)
-                //    let newPenObj = new PenPart(0, 0, 1580, 1, 1, Obj)
-                //    listPenParts.push(newPenObj)
-                //    console.log(Obj)
-                //}
+                
                 let newObj = p.loadModel('./_global_interface/assets/newPen_(' + ptNbr + ').obj', true)
+                
                 let newPenPart = new PenPart(0, 0, -100, 1, 1, newObj)
 
                 penParts.push(newPenPart);
@@ -109,6 +103,23 @@ function loadSkt2() {
 }
 
 
+
+
+
+const paintSketch = p => {
+    
+    p.preload = function () {
+
+    }
+    
+    p.setup = function () {
+
+    }
+
+    p.draw = function () {
+
+    }
+}
 
 
 
