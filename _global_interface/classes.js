@@ -28,10 +28,10 @@ let listStyles = [];
 
 const listFonts = ["tahoma", "arial"]
 
-const ptNbr = 2;
+const ptNbr = 17;
 
 const pageDummy = document.querySelectorAll(".pagedjs_area")[0];
-console.log(pageDummy)
+// console.log(pageDummy)
 
 let globalCalqueIndex = 0;
 class Calque {
@@ -57,7 +57,7 @@ class Calque {
         // this.pageElem.innerHTML = "calque" + this.calqueIndex;
         
         // pour édition critérium
-        this.pageElem.innerHTML = "Critérium";
+        this.pageElem.innerHTML = "pt "+ ptNbr;
         
         this.pageElem.contentEditable = true;
 
@@ -166,39 +166,6 @@ let txtHandle = new textHandle();
 
 
 
-
-
-let listSketches = []; let indexSketches = 0;
-
-
-function loadInputSketches() {
-    let sketchesTagsArea = document.getElementById("sketchesTagsArea");
-    console.log(sketchesTagsArea)
-    //for (let i = 0; i < 4; i++) {
-    //    let newInputSketch = new InputSketchElem(indexSketches)
-    //    newInputSketch.addToUI(inputItemsSketches)
-    //    listSketches.push(newInputSketch)
-    //    indexSketches++;
-    //}
-}
-loadInputSketches();
-
-let onScreenCanvasContainer = document.createElement("div");
-onScreenCanvasContainer.style.display = "block";
-onScreenCanvasContainer.style.position = "absolute";
-onScreenCanvasContainer.classList.add("onscreen_canvas")
-document.body.appendChild(onScreenCanvasContainer)
-
-let offScreenCanvasContainer = document.createElement("div")
-offScreenCanvasContainer.style.display = "block";
-offScreenCanvasContainer.style.position = "absolute";
-offScreenCanvasContainer.classList.add("offscreen_canvas");
-document.body.appendChild(offScreenCanvasContainer)
-
-let myCanvasContainer;
-
-setTimeout(() => { load2canvas() }, 180);
-
 let listCnv = [];
 let save = 0;
 
@@ -298,26 +265,7 @@ const sketch_1 = p => {
 
 let sketches = [];
 
-let offPixelDensity = 1;
 
-
-// !!!! MAUVAISE MANIERE DE CHARGE DEUX SKETCH AVEC DES PARAMETRES difF
-function load2canvas() {
-    // document.getElementById("defaultCanvas0").remove()
-    for (let i = 0; i < 2; i++) {
-        if (i == 1) {
-            offPixelDensity = 1;
-            sketchIndex = 2;
-            let newSketch = new p5(listSkt2[1], offScreenCanvasContainer)
-            // let newSketch = new p5(sketch_1, offScreenCanvasContainer)
-            sketches.push(newSketch)
-        } else {
-            let newSketch = new p5(listSkt2[0], onScreenCanvasContainer)
-            // let newSketch = new p5(sketch_1, onScreenCanvasContainer)
-            sketches.push(newSketch)
-        }
-    }
-}
 
 
 let savedImg = [];

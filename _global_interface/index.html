@@ -27,8 +27,8 @@
     </div>
 
     <div id="global-interface" class="global-interface-visible">
-        <div id="imgFilterWrapper" class="drag">
-            <div id="css-box-handle" class="handle">move</div>
+        <div id="imgFilterWrapper" class="drag box-style">
+            <div class="handle"></div>
             <style id="canvasFilters" contenteditable>
                 .imgFilter {
                     filter: blur(0px);
@@ -43,7 +43,7 @@
                 <div class="signal-button" name="still" id="visible-overlay-button">Preview</div>
             </div>
             <div id="page-informations">
-                <p>Taille : A3</p>
+                <p>Taille : A4</p>
                 <p>Fond perdu : 6mm</p>
                 <p>Marques : traits de coupe & fond perdu</p>
                 <p>
@@ -56,8 +56,8 @@
         </div>
 
         <div class="modifier-layer" id="text-layer">
-            <div class="box-inputs-wrapper drag">
-                <div id="css-box-handle" class="handle">move</div>
+            <div class="box-inputs-wrapper drag box-style">
+                <div class="handle"></div>
                 <!-- <p id="calqueTagsArea">Calques : </p> -->
                 <div class="tagsArea" id="calqueTagsArea">
                 </div>
@@ -67,35 +67,47 @@
                 </div>
             </div>
 
-            <div id="calque-css-style" class="drag">
-                <div id="css-box-handle" class="handle">move</div>
+            <div id="calque-css-style" class="drag box-style">
+                <div class="handle"></div>
 
                 <p id="name-calque-focus"></p>
 
                 <div id="css_item_wrapper">
                     <div class="css_item">
                         <label for="left_css">X-axis : </label>
-                        <textarea class="calqueCssInput" id="css_left_input" name="left_css" rows="1" cols="15"
+                        <textarea class="calqueCssInput" id="css_left_input" name="left_css" rows="1" cols="10"
                             placeholder="25px">25px</textarea>
                     </div>
                     <div class="css_item">
                         <label for="top_css">Y-axis : </label>
-                        <textarea class="calqueCssInput" id="css_top_input" name="top_css" rows="1" cols="15"
+                        <textarea class="calqueCssInput" id="css_top_input" name="top_css" rows="1" cols="10"
                             placeholder="25px">25px</textarea>
                     </div>
                     <div class="css_item">
                         <label for="zindex_css">z-index : </label>
-                        <textarea class="calqueCssInput" id="" name="z_css" rows="1" cols="15"
+                        <textarea class="calqueCssInput" id="" name="z_css" rows="1" cols="10"
                             placeholder="25px">5</textarea>
                     </div>
                     <div class="css_item">
                         <label for="fontSize_css">Font-size : </label>
-                        <textarea class="calqueCssInput" id="" name="fontSize_css" rows="1" cols="15"
+                        <textarea class="calqueCssInput" id="" name="fontSize_css" rows="1" cols="10"
                             placeholder="60px">80px</textarea>
                     </div>
                     <div class="css_item">
-                        <label for="fontFamily_css">Font-family : </label>
-                        <textarea class="calqueCssInput" id="" name="fontFamily_css" rows="1" cols="15">arial</textarea>
+                        <label for="fontfamily">Chose font family : </label>
+                        <input class="calqueCssInput" list="fontFamilies" name="fontfamily" id="fontfamily_menu">
+                        <datalist id="fontFamilies">
+                            <option value="Garamond">Garamond</option>
+                            <option value="Tahoma">Tahoma</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Courier">Courier</option>
+                            <option value="Gill Sans">Gill Sans</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Trebuchet MS">Trebuchet MS</option>
+                            <option value="Brush Script MT">Brush Script MT</option>
+                            <option value="Georgia">Georgia</option>
+                        </datalist>
                     </div>
                     <div class="css_item">
                         <label for="colorTxt">Text color : </label>
@@ -107,8 +119,7 @@
                     </div>
                 </div>
 
-                <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new style
-                    below</button>
+                <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new style</button>
                 <!-- <button id="showTitreStyles" type="button" name="btnCSS" onclick="showTitreStyles()"> + </button> -->
                 <div id="titre-styles-wrapper">
                     <p id="head-titre-style-wrapper">styles de calque sauvegardés :</p>
@@ -130,8 +141,8 @@
         </div>
 
         <div class="modifier-layer active-modifier-layer" id="canvas-layer">
-            <div class="box-inputs-wrapper drag" id="input-items-sketches">
-                <div class="handle">move</div>
+            <div class="box-inputs-wrapper drag box-style" id="input-items-sketches">
+                <div class="handle"></div>
                 <p class="name-tag-area">Sketches : </p>
                 <div class="tagsArea" id="sketchesTagsArea"></div>
             </div>

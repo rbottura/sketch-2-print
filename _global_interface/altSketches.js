@@ -1,131 +1,131 @@
 console.log("altSkt loading")
 
-let listSkt2 = [];
+let listSkt = [];
 
-loadSkt2()
-function loadSkt2() {
-    let pxlDensity = [1, 15];
-    for (let i = 0; i < 2; i++) {
-        listSkt2[i] = p => {
-            let listModels = []
-            let listPenParts = []
-            p.preload = function () {
-                
-                let newObj = p.loadModel('./_global_interface/assets/newPen_(' + ptNbr + ').obj', true)
-                
-                let newPenPart = new PenPart(0, 0, -100, 1, 1, newObj)
+let wCanvas = Math.round(pageProp.width);
+let hCanvas = Math.round(pageProp.height);
 
-                penParts.push(newPenPart);
-            }
+listSkt[0] = p => {
 
-            let wCanvas = 463;
-            let hCanvas = 655;
+    let penParts = [];
 
-            let skIndex = sketchIndex;
-            // p.randomSeed(1)
-            class PenPart {
-                constructor(x, y, z, scale, speed, obj) {
-                    this.x = x;
-                    this.y = y;
-                    this.z = z;
-                    this.scale = scale;
-                    this.speed = speed;
-                    this.obj = obj
-                }
-                show() {
-                    p.push()
-                    p.translate(this.x, this.y, this.z)
-                    // p.rotateX(.6)
-                    p.scale(this.scale)
-                    p.stroke(p.color("black"))
-                    p.noFill();
-                    // p.fill(p.color("rgba(128,255,128,.1)"))
-                    // p.ambientMaterial(p.color("white"))
-                    // p.specularMaterial(255)
-                    p.translate(-10, 20, 0)
-                    p.rotateY(.6)
-                    p.rotateX(.8)
-                    p.strokeWeight(pxlDensity[i] / 8)
-                    p.model(this.obj)
-                    // p.box(50, 72, 120)
-                    p.pop()
-                    // p.randomSeed(100)
-                }
-            }
-
-            let penParts = [];
-
-            let cnv;
-            // let cam, deep;
-            p.setup = function () {
-                cnv = p.createCanvas(wCanvas, hCanvas, p.WEBGL);
-                // p.createCanvas(wCanvas, hCanvas);
-                p.pixelDensity(pxlDensity[i])
-
-                cam = p.camera(0, 0, (p.height / 2) / p.tan(p.PI / 6) * 3, 0, 0, 0, 0, 1, 0);
-                let newFov = 3.0;
-                deep = p.perspective(p.PI / newFov, p.width / p.height, 0.1, 20000);
-                console.log(deep);
-            };
-
-            p.draw = function () {
-                p.background(p.color("transparent"));
-
-                p.lights()
-
-                penParts[0].z = p.mouseX * 5;
-
-                //for(const elem of listPenParts){
-                //    elem.show()
-                //}
-                
-                penParts[0].show()
-
-                if (!showCanvas) stopCanvas()
-                else playCanvas();
-            };
-
-            addEventListener("keydown", (e) => {
-                if (e.key == "&" && skIndex == 2) showPrintImage(cnv.canvas);
-                if (e.key == "é") playCanvas();
-            })
-
-            function stopCanvas() {
-                p.noLoop()
-            }
-
-            function playCanvas() {
-                p.loop();
-            }
-
-        };
+    class PenPart {
+        constructor(x, y, z, scale, speed, obj) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.scale = scale;
+            this.speed = speed;
+            this.obj = obj
+        }
+        show() {
+            p.push()
+            p.translate(this.x, this.y, this.z)
+            // p.rotateX(.6)
+            p.scale(this.scale)
+            p.stroke(p.color("black"))
+            p.noFill();
+            // p.fill(p.color("rgba(128,255,128,.1)"))
+            // p.ambientMaterial(p.color("white"))
+            // p.specularMaterial(255)
+            p.translate(-10, 20, 0)
+            p.rotateY(.6)
+            p.rotateX(.8)
+            p.strokeWeight(1)
+            p.model(this.obj)
+            // p.box(50, 72, 120)
+            p.pop()
+            // p.randomSeed(100)
+        }
     }
-}
 
+    let listModels = []
+    let listPenParts = []
 
-
-
-
-const paintSketch = p => {
-    
     p.preload = function () {
 
-    }
-    
-    p.setup = function () {
+        for (let i = 1; i < 18; i++) {
+            let part = p.loadModel('./_global_interface/assets/newPen_(' + i + ').obj', true)
+            let newPenPart = new PenPart(0, 0, -100, 1, 1, part)
+            listPenParts.push(newPenPart);
+        }
+        let newObj = p.loadModel('./_global_interface/assets/newPen_(' + ptNbr + ').obj', true)
 
+        // penParts.push(newPenPart);
     }
+
+
+    let skIndex = sketchIndex;
+    // p.randomSeed(1)
+
+    let cnv;
+    // let cam, deep;
+    p.setup = function () {
+        cnv = p.createCanvas(wCanvas, hCanvas, p.WEBGL);
+        // p.createCanvas(wCanvas, hCanvas);
+        p.pixelDensity(3)
+
+        cam = p.camera(0, 0, (p.height / 2) / p.tan(p.PI / 6) * 3, 0, 0, 0, 0, 1, 0);
+        let newFov = 3.0;
+        deep = p.perspective(p.PI / newFov, p.width / p.height, 0.1, 20000);
+        // console.log(deep);
+    };
 
     p.draw = function () {
+        p.background(p.color("transparent"));
 
+        p.lights()
+
+        // penParts[0].z = p.mouseX * 5;
+        // p.translate(0,0,p.mouseX*5)
+
+        // for (const elem of listPenParts) {
+        // elem.show()
+        // }
+        listPenParts[ptNbr - 1].z = p.mouseX * 5;
+        listPenParts[ptNbr - 1].show();
+
+        // penParts[0].show()
+
+        if (!showCanvas) stopCanvas()
+        else playCanvas();
+    };
+
+    addEventListener("keydown", (e) => {
+        if (e.key == "&") showPrintImage(cnv.canvas);
+        if (e.key == "é") playCanvas();
+    })
+
+    function stopCanvas() {
+        p.noLoop()
     }
+
+    function playCanvas() {
+        p.loop();
+    }
+
+};
+
+
+let listSketches = []
+
+let onScreenCanvasContainer = document.createElement("div");
+onScreenCanvasContainer.style.display = "block";
+onScreenCanvasContainer.style.maxHeight = pageProp.height +"px";
+onScreenCanvasContainer.style.position = "absolute";
+onScreenCanvasContainer.classList.add("onscreen_canvas")
+document.body.appendChild(onScreenCanvasContainer)
+
+loadP5canvas();
+function loadP5canvas() {
+    let newP5 = new p5(listSkt[0], onScreenCanvasContainer)
+    listSketches.push(newP5)
 }
 
-
-
-
-
-
+// TEST FOR MATTER JS
+// TEST FOR MATTER JS
+// TEST FOR MATTER JS
+// TEST FOR MATTER JS
 
 let sketchMatter = []
 
@@ -142,7 +142,7 @@ function loadSketchMatter() {
         let render;
 
         p.preload = function () {
-            console.log("heloo")
+            // console.log("heloo")
             engine = Engine.create()
             render = Render.create({
                 element: onScreenCanvasContainer,
@@ -174,10 +174,9 @@ function loadSketchMatter() {
     }
 }
 
-setTimeout(() => { loadP5() }, 350)
+// setTimeout(() => { loadP5() }, 350)
 function loadP5() {
     let newSketch = new p5(sketchMatter[0], onScreenCanvasContainer)
-    console.log(newSketch)
+    // console.log(newSketch)
     sketches.push(newSketch)
-
 }
