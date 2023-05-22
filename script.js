@@ -13,7 +13,7 @@ let scaleCSS;
 let first_page;
 let pageProp = {
     width: 0,
-    height: 0, 
+    height: 0,
 };
 
 window.onload = function () {
@@ -83,7 +83,8 @@ window.onload = function () {
     // const lol = 2;
     function getPageInfo() {
         first_page = document.querySelector(".pagedjs_first_page");
-        // first_page.classList.remove('pagedjs_right_page')
+        first_page.style.backgroundColor = "orangered";
+        first_page.classList.remove('pagedjs_right_page')
 
         pageRatio = Math.pow((0.68), paperScalingRatio["A3"]);
 
@@ -132,19 +133,28 @@ window.onload = function () {
 
         // load scripts for interface 
         let scripts = []
-        let paths = ["./_global_interface/classes.js", "./_global_interface/altSketches.js", "./_global_interface/gui.js"]
+        let paths = ["./_global_interface/classes.js", "./_global_interface/altSketches.js", "./_global_interface/gamepadSketch.js", "./_global_interface/gui.js"]
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < paths.length; i++) {
             let newScript = document.createElement('script')
             newScript.src = paths[i]
             scripts.push(newScript)
         }
 
-        document.body.appendChild(scripts[0]).addEventListener('load', () => {
-            document.body.appendChild(scripts[1]).addEventListener('load', () => {
-                document.body.appendChild(scripts[2])
-            })
-        })
+        let scriptIndex = 0;
+
+        appendScripts()
+        function appendScripts(){
+            if(scriptIndex<paths.length){
+                document.body.appendChild(scripts[scriptIndex]).addEventListener('load', () => {
+                    scriptIndex++;
+                    console.log(scriptIndex)
+                    appendScripts();
+                })
+            }
+        }
+        // while (scriptIndex < paths.length) {
+        // }
     }
 
 
@@ -157,10 +167,10 @@ window.onload = function () {
         first_page.style.transform = "none";
         first_page.style.left = "0px";
         toggleDisplayOverlay(visible_overlay_button.innerHTML);
-        
+
         showCnvElements(false)
     })
-    
+
     addEventListener("afterprint", () => {
         first_page.style.transform = "scale(" + pageRatio + ")";
         first_page.style.left = "calc(50vw - +" + (pageProp.width / 2) + "px)";

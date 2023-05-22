@@ -49,7 +49,8 @@ let calqueFocusIndex = 0, calqueFocus, calqueFocusObj;
 
 document.addEventListener("click", (e) => focusCalque(e))
 function focusCalque(e) {
-    if (e.target.classList.contains("calque_tag") || e.target.classList.contains("calqueElem")) {
+    console.log(e.target.classList.contains('image_tag'))
+    if ((e.target.classList.contains("calque_tag") || e.target.classList.contains("calqueElem")) && !(e.target.classList.contains('image_tag'))) {
         calqueFocusIndex = e.target.name;
         let calqueFocusIndexArr = calqueFocusIndex - 1;
         calqueFocus = listCalques[calqueFocusIndexArr];
@@ -358,3 +359,12 @@ function showCnvElements(show) {
         placeCnvBtn.style.display = "none";
     }
 }
+
+
+document.addEventListener("keydown", (e) => {
+    if(e.key == "5"){
+        onScreenCanvasContainer.innerHTML = "";
+        let newSketch = new p5(listSkt[1], onScreenCanvasContainer)
+        listSketches.push(newSketch)
+    }
+})

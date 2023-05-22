@@ -94,6 +94,7 @@ listSkt[0] = p => {
     addEventListener("keydown", (e) => {
         if (e.key == "&") showPrintImage(cnv.canvas);
         if (e.key == "é") playCanvas();
+        if (e.key == '5') p.remove();
     })
 
     function stopCanvas() {

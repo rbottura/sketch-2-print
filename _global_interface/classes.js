@@ -270,7 +270,7 @@ let sketches = [];
 
 let savedImg = [];
 function showPrintImage(canvas) {
-    console.log(canvas)
+    imageTagControl(true, false)
     let imageData = canvas.toDataURL();
 
     let cnvImage = document.createElement("img");

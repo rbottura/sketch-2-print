@@ -336,6 +336,13 @@ input[type="radio" i] {
     border-radius: 3px;
 }
 
+#images_tag_box{
+    display: block;
+    position: absolute;
+    z-index: 556;
+    left: 25px;
+    top: 600px;
+}
 
 .tagsArea{
     border: solid rgba(255, 255, 255, 0.15) 1px;
@@ -372,8 +379,8 @@ input[type="radio" i] {
     display: block;
     position: absolute;
     z-index: 1;
-    width: 100%;
-    object-fit: contain;
+    height: 110%;
+    object-fit: contain;;
 }
 
 #placeCanvas{
