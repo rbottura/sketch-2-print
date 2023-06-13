@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="./global_ui.css">
 
 
-    <script src="./libs/p5.min.js"></script>
-    <script src="./libs/p5.sound.min.js"></script>
+    <!-- <script src="./libs/p5.min.js"></script> -->
+    <!-- <script src="./libs/p5.sound.min.js"></script> -->
 </head>
 
 <body>
@@ -39,7 +39,7 @@
             <div class="handle"></div>
             <p>images :</p>
             <div id="sketches-mini-wrapper">
-                    
+
             </div>
         </div>
         <div id="placeCanvas">&lt;</div>
@@ -59,17 +59,29 @@
                 <p>
                     Pour sauvegardé l'image, appuyez sur la touche "&".
                 </p>
+                <p><input id="page_color_pick" type="color"> bck color</p>
+                <input class="page_input_text" placeholder="#fff" type="text" name="page_bck_color" id="page_bck_color_text">
+                <p>bck image</p>
+                <input type="file" id="input_bck_img_file" name="" accept=".jpg, .jpeg, .png">
+                <label for="">bck size</label>
+                <input class="page_input_text" placeholder="150%" type="text" name="" id="page_bck_size_text">
+                <label for="">bck position</label>
+                <input class="page_input_text" placeholder="center" type="text" name="" id="page_bck_position_text">
+                <label for="">bck repeat</label>
+                <input class="page_input_text" placeholder="no-repeat" type="text" name="" id="page_bck_repeat_text">
+                <label for="">show bck image</label>
+                <input type="checkbox" name="" id="page_bck_image_checkbox">
             </div>
         </div>
 
         <div class="modifier-layer" id="text-layer">
-            <div class="box-inputs-wrapper drag box-style">
+            <div id="text_tags_box" class="box-inputs-wrapper drag box-style">
                 <div class="handle"></div>
                 <!-- <p id="calqueTagsArea">Calques : </p> -->
                 <div class="tagsArea" id="calqueTagsArea">
                 </div>
                 <div class="item_interface">
-                    <button class="calque-btn" type="button" name="button" onclick="addCalque()">+1</button>
+                    <button class="calque-btn" type="button" name="button" onclick="loadDefStyle('addCalque')">+1</button>
                     <button class="calque-btn" id="" type="button" onclick="removeCalque()">suppr</button>
                 </div>
             </div>
@@ -126,7 +138,8 @@
                     </div>
                 </div>
 
-                <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new style</button>
+                <button class="style-btn" type="button" name="btnCSS" onclick="addStyle()">add inputs as new
+                    style</button>
                 <!-- <button id="showTitreStyles" type="button" name="btnCSS" onclick="showTitreStyles()"> + </button> -->
                 <div id="titre-styles-wrapper">
                     <p id="head-titre-style-wrapper">styles de calque sauvegardés :</p>
@@ -151,16 +164,20 @@
             <div class="box-inputs-wrapper drag box-style" id="input-items-sketches">
                 <div class="handle"></div>
                 <p class="name-tag-area">Sketches : </p>
-                <div class="tagsArea" id="sketchesTagsArea"></div>
+                <div class="tagsArea" id="sketchesTagsArea">
+                    <div name='criterium' class="sketch_tag active_sketch_tag" id="criterium_tag">Critérium</div>
+                    <div name='gamepad' class="sketch_tag" id="gamepad_tag">GamePad Draw</div>
+                    <div name='webcam' class="sketch_tag" id="webcam_tag">Webcam</div>
+                </div>
             </div>
         </div>
 
     </div>
 
-    <script src="./altSketches.js"></script>
-    <script src="./classes.js"></script>
-    <script src="./gui.js"></script>
-    <script src="./sketch1/sketch.js"></script>
+    <!-- <script src="./altSketches.js"></script> -->
+    <!-- <script src="./classes.js"></script> -->
+    <script src="./test_gui.js"></script>
+    <!-- <script src="./sketch1/sketch.js"></script> -->
 </body>
 
 </html>

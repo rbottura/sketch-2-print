@@ -1,4 +1,4 @@
-console.log("gamepad loading")
+console.log("loading gamepad sketch file")
 
 let jImg, indexImg = 0, indexFont = 3;
 let joystick;
@@ -7,14 +7,12 @@ let Ps_pink = [], Garam_blue = [], Raleway_green = [], timbres = [], Garam_pink 
 let listColorFonts = [Ps_pink, Garam_blue, Garam_pink, Garam_bw_small, Raleway_green, timbres, fleurs, Destra_yellow, Minipax_white, brushes];
 
 let overlayCanvas;
+let gamepad_canvas;
 
-loadGamepadDraw()
-function loadGamepadDraw() {
-
+function loadGamepadSketch() {
     listSkt[1] = p => {
 
         p.preload = function () {
-
             for (let i = 0; i < 58; i++) {
                 Ps_pink.push(p.loadImage('./gamepad_sprites/PeaceSans/Ps_pink/' + i + '.png'))
             }
@@ -83,6 +81,7 @@ function loadGamepadDraw() {
         // let cam, deep;
         p.setup = function () {
             cnv = p.createCanvas(wCanvas, hCanvas);
+            gamepad_canvas = cnv;
             p.pixelDensity(3)
 
             jImg = new JoyImage(WiW / 2, WiH / 2, 1, listColorFonts[indexFont][indexImg])
@@ -104,10 +103,9 @@ function loadGamepadDraw() {
 
         p.draw = function () {
 
-            // console.log(jImg)
-
             p.imageMode(p.CENTER)
             p.rectMode(p.CENTER)
+
             if (p.mouseIsPressed) {
                 overlayCanvas.fill(255);
                 overlayCanvas.noStroke()
@@ -128,27 +126,37 @@ function loadGamepadDraw() {
                 updateBrush();
             }
 
-            if (!showCanvas) stopCanvas()
-            else playCanvas();
+            if (!showCanvas) {
+                p.noLoop()
+            } else {
+                p.loop();
+            }
+
+            console.log('gamepad sketch running')
         };
 
-        addEventListener("keydown", (e) => {
-            if (e.key == "&") {
+        p.keyPressed = function (e) {
+            console.log("gamepad key pressed")
+            console.log(e)
+            if (e.key == "&" && currentSketch == "gamepad") {
                 console.log(overlayCanvas.canvas)
                 showPrintImage(overlayCanvas.canvas);
             }
-            if (e.key == "é") playCanvas();
-        })
-
-        function stopCanvas() {
-            p.noLoop()
         }
 
-        function playCanvas() {
-            p.loop();
+        p.mousePressed = function (e) {
+            if (e.target.classList.contains('sketch_tag')) {
+                let btn = e.target;
+                let name = btn.getAttribute('name');
+                if (name != 'gamepad') {
+                    // p.noLoop();
+                } else {
+                    // p.loop()
+                }
+            }
+            console.log("gamepad mouse pressed & " + p.isLooping())
         }
-
-    };
+    }
 }
 
 
@@ -239,33 +247,4 @@ function updateBrush() {
     }
 };
 
-let sketchesTag = [], globalZindex = 1;
-function imageTagControl(add, show, imgTag) {
-    globalZindex++;
-    if (add) {
-        let newImgTag = document.createElement('div');
-        newImgTag.setAttribute("name", sketchesTag.length)
-        sketchesTag.push(newImgTag)
-        newImgTag.innerHTML = 'img ' + sketchesTag.length;
-        newImgTag.classList.add('item_interface', 'calque_tag', 'image_tag');
-        document.querySelector("#sketches-mini-wrapper").appendChild(newImgTag);
-        newImgTag.addEventListener("click", (e) => { imageTagControl(false, true, e.target) })
-    } else if (show) {
-        colorSelectedTag(imgTag)
-        let targetImgIndex = imgTag.getAttribute('name');
-        savedImg[targetImgIndex].style.zIndex = globalZindex;
-    }
-}
-
-function colorSelectedTag(tag) {
-    for (const elem of sketchesTag) {
-        if (elem.classList.contains("active_calque_tag"))
-            elem.classList.remove("active_calque_tag")
-    }
-    tag.classList.add("active_calque_tag");
-}
-
-function financial(x) {
-    return Number.parseFloat(x).toFixed(1);
-}
 

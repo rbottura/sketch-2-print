@@ -51,8 +51,8 @@ window.onload = function () {
             // Call each script one by one
             loadScript("vendors/js/paged.polyfill.js")
                 .then(script => loadScript("vendors/js/regex-typo.js"))
-                .then(() => { setTimeout(() => { getPageInfo() }, 150) })
-                .then(() => { setTimeout(() => { getGUI() }, 300) })
+                .then(() => { setTimeout(() => { getPageInfo() }, 350) })
+                .then(() => { setTimeout(() => { getGUI() }, 600) })
 
             //add the paged.js css
             var pagedCss = document.createElement("link");
@@ -133,7 +133,7 @@ window.onload = function () {
 
         // load scripts for interface 
         let scripts = []
-        let paths = ["./_global_interface/classes.js", "./_global_interface/altSketches.js", "./_global_interface/gamepadSketch.js", "./_global_interface/gui.js"]
+        let paths = ["./_global_interface/classes.js", "./_global_interface/criterium.js", "./_global_interface/gamepadSketch.js", "./_global_interface/webcam.js","./_global_interface/gui.js"]
 
         for (let i = 0; i < paths.length; i++) {
             let newScript = document.createElement('script')

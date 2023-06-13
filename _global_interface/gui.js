@@ -1,48 +1,46 @@
 console.log("gui loading")
 
-function loadDefStyles() {
+function loadDefStyle(event) {
     let randomX = Math.floor(getRandomArbitrary(-100, 100) + 100) + "px";
     let randomY = Math.floor(getRandomArbitrary(-200, 200) + 200) + "px";
-    let posX = 360 + "px";
+    let posX = pageProp.width / 2 + "px";
     // let posY = (globalStyleIndex * 65) + "px";
-    let posY = 1072 + "px";
+    let posY = pageProp.height / 4 + "px";
 
     let randomTextColor = "#" + Math.trunc(Math.random() * 16777215).toString(16);
     if (randomTextColor.length == 6) { randomTextColor += "0" }
-    let txtColor = "black";
+    let txtColor = randomTextColor
 
     let randomBckColor = "#" + Math.trunc(Math.random() * 16777215).toString(16);
     if (randomBckColor.length == 6) { randomBckColor += "0" }
-    let bckColor = "none"
+    let bckColor = randomBckColor
 
     // let newStyle = new CalqueStyle(randomX, randomY, 500, "60px", "arial", randomTextColor, randomBckColor);
-    let newStyle = new CalqueStyle(posX, posY, 500, "22px", "garamond", txtColor, bckColor);
+    let newStyle = new CalqueStyle(posX, posY, 500, "80px", "garamond", txtColor, bckColor);
 
     listDefStyles.push(newStyle);
     listStyles.push(newStyle);
+
+    if(event == 'addCalque'){
+        loadNewCalque();
+    }
 }
 
-const nbrDefStyles = 8;
-preloadStyles(nbrDefStyles);
+preloadStyles(1);
+
 function preloadStyles(nbr) {
     for (let i = 0; i < nbr; i++) {
-        loadDefStyles();
-        if (i == nbr - 1) {
-            loadDefCalque();
-        }
+        loadDefStyle('addCalque');
     }
 }
 
-function loadDefCalque() {
+function loadNewCalque() {
     console.log("load claque")
-    // let randomStyle = Math.trunc(Math.random() * 8);
-    for (let i = 0; i < 1; i++) {
-        // console.log(i)
-        let newCalque = new Calque(listDefStyles[i]);
-        listDefCalquesObj.push(newCalque)
-        listCalquesObj.push(newCalque)
-    }
-    return console.log(listDefCalquesObj);
+
+    let newCalque = new Calque(listDefStyles[listDefStyles.length-1]);
+    listDefCalquesObj.push(newCalque)
+    listCalquesObj.push(newCalque)
+
 }
 
 let calqueFocusIndex = 0, calqueFocus, calqueFocusObj;
@@ -88,14 +86,6 @@ function displayCalqueStyle() {
     }
     let calqueFocusStyle = calqueFocusObj.pageElemStyle.styleIndex;
     listStyles[calqueFocusStyle - 1].uiStyleDomElem.classList.add("active-calque-style")
-}
-
-function addCalque() {
-    let randomStyle = listStyles[Math.trunc(Math.random() * nbrDefStyles)];
-    // console.log(randomStyle)
-    let newCalque = new Calque(randomStyle);
-    listDefCalquesObj.push(newCalque)
-    listCalquesObj.push(newCalque)
 }
 
 function addStyle() {
@@ -362,9 +352,208 @@ function showCnvElements(show) {
 
 
 document.addEventListener("keydown", (e) => {
-    if(e.key == "5"){
-        onScreenCanvasContainer.innerHTML = "";
-        let newSketch = new p5(listSkt[1], onScreenCanvasContainer)
+    if (e.key == "/") {
+        currentSketch = "webcam";
+        listSkt[0] = undefined;
+
+        loadWebcamSketch();
+        let newSketch = new p5(listSkt[2], onScreenCanvasContainer)
         listSketches.push(newSketch)
     }
+    if (e.key == "*") {
+        currentSketch = "gamepad";
+        listSkt[0] = undefined;
+
+        loadGamepadSketch()
+        let newSketch = new p5(listSkt[1], onScreenCanvasContainer)
+        listSketches.push(newSketch)
+
+    }
 })
+
+//Main page cutomisation
+//Main page cutomisation
+//Main page cutomisation
+//Main page cutomisation
+//Main page cutomisation
+
+let page = first_page;
+
+document.querySelector('#page_color_pick').addEventListener('change', (e) => {
+    let color = e.target.value
+    document.querySelector('#page_bck_color_text').value = e.target.value;
+    page.style.backgroundColor = color;
+})
+
+document.querySelector('#page_bck_color_text').addEventListener('change', (e) => {
+    let color = e.target.value
+    console.log(color)
+    page.style.backgroundColor = color;
+})
+
+document.addEventListener('click', () => {
+    // console.log(img)
+})
+
+let src;
+document.querySelector('#input_bck_img_file').addEventListener('input', (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (loadedEvent) {
+        const imageUrl = loadedEvent.target.result;
+        src = imageUrl;
+        page.style.backgroundImage = `url(${imageUrl})`;
+    };
+
+    reader.readAsDataURL(file);
+})
+
+document.querySelector('#page_bck_size_text').addEventListener('change', (e) => {
+    page.style.backgroundSize = e.target.value;
+})
+
+document.querySelector('#page_bck_repeat_text').addEventListener('change', e => {
+    page.style.backgroundRepeat = e.target.value;
+})
+
+document.querySelector('#page_bck_image_checkbox').addEventListener('change', e => {
+    if (e.target.checked && src) {
+        page.style.backgroundImage = `url(${src})`
+    } else {
+        page.style.backgroundImage = '';
+    }
+})
+
+document.querySelector('#page_bck_position_text').addEventListener('change', e => {
+    page.style.backgroundPosition = e.target.value;
+})
+
+
+
+// Image tags functions 
+// Image tags functions 
+// Image tags functions 
+// Image tags functions 
+// Image tags functions 
+
+let sketchesTag = [], globalZindex = 1;
+function imageTagControl(add, show, imgTag) {
+    globalZindex++;
+    if (add) {
+        let newImgTag = document.createElement('div');
+        newImgTag.setAttribute("name", sketchesTag.length)
+        sketchesTag.push(newImgTag)
+        newImgTag.innerHTML = 'img ' + sketchesTag.length;
+        newImgTag.classList.add('item_interface', 'calque_tag', 'image_tag');
+        document.querySelector("#sketches-mini-wrapper").appendChild(newImgTag);
+        newImgTag.addEventListener("click", (e) => { imageTagControl(false, true, e.target) })
+    } else if (show) {
+        colorSelectedTag(imgTag)
+        let targetImgIndex = imgTag.getAttribute('name');
+        savedImg[targetImgIndex].style.zIndex = globalZindex;
+    }
+}
+
+function colorSelectedTag(tag) {
+    for (const elem of sketchesTag) {
+        if (elem.classList.contains("active_calque_tag"))
+            elem.classList.remove("active_calque_tag")
+    }
+    tag.classList.add("active_calque_tag");
+}
+
+function financial(x) {
+    return Number.parseFloat(x).toFixed(1);
+}
+
+
+
+
+// Sketches global interface
+// Sketches global interface
+// Sketches global interface
+// Sketches global interface
+// Sketches global interface
+
+
+
+let listSketches = []
+
+let onScreenCanvasContainer = document.createElement("div");
+onScreenCanvasContainer.style.display = "block";
+onScreenCanvasContainer.style.maxHeight = pageProp.height + "px";
+onScreenCanvasContainer.style.position = "absolute";
+onScreenCanvasContainer.classList.add("onscreen_canvas")
+document.body.appendChild(onScreenCanvasContainer)
+
+
+// listSkt[0] = criterium, listSkt[1] = gamepad, listSkt[2] = webcam
+loadP5canvas();
+function loadP5canvas() {
+    let newP5 = new p5(listSkt[0], onScreenCanvasContainer)
+    listSketches.push(newP5)
+}
+
+
+// addWebcamSketch()
+function addWebcamSketch() {
+    let newSketch = new p5(listSkt[2], onScreenCanvasContainer)
+    listSketches.push(newSketch)
+}
+
+document.querySelectorAll('.sketch_tag').forEach(elem => {
+    elem.addEventListener('click', (e) => {
+        if(!e.target.classList.contains('active_sketch_tag')){
+            active_sketch_tag.classList.remove('active_sketch_tag')
+            active_sketch_tag = e.target;
+            active_sketch_tag.classList.add('active_sketch_tag')
+            
+            loadTargetSketch(e.target.getAttribute('name'))   
+        }
+    })
+})
+
+document.addEventListener('click', (e) => {
+    // console.log(criterium_canvas)
+})
+
+let first_webcam_call = true; 
+let first_gamepad_call = true; 
+let first_criterium_call = true; 
+
+let currentSketch;
+let active_sketch_tag = document.querySelector('#criterium_tag');
+
+loadTargetSketch('criterium')
+function loadTargetSketch(sketch){
+    onScreenCanvasContainer.innerHTML = "";
+    if(sketch == 'criterium'){
+        currentSketch = 'criterium';
+        if(first_criterium_call){
+            first_criterium_call = false;
+            loadCriteriumSketch()
+            new p5(listSkt[0], onScreenCanvasContainer)
+        } else {
+            onScreenCanvasContainer.appendChild(criterium_canvas.elt)
+        }
+    } else if (sketch == 'gamepad') {
+        currentSketch = 'gamepad'
+        if(first_gamepad_call){
+            first_gamepad_call = false;
+            loadGamepadSketch()
+            new p5(listSkt[1], onScreenCanvasContainer)
+        } else {
+            onScreenCanvasContainer.appendChild(gamepad_canvas.elt)
+        }
+    } else if (sketch == 'webcam') {
+        currentSketch = 'webcam'
+        if(first_webcam_call){
+            first_webcam_call = false
+            loadWebcamSketch()
+            new p5(listSkt[2], onScreenCanvasContainer)
+        } else {
+            onScreenCanvasContainer.appendChild(webcam_canvas.elt)
+        }
+    }
+}

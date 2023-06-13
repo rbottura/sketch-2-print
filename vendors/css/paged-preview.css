@@ -39,10 +39,7 @@ pagedjs-ignore {
     .pagedjs_first_page {
         /* OG LINE */
         /* margin-left: var(--pagedjs-width); */
-
         transform-origin: top left;
-
-        left: calc(50vw - 330px);
     }
 
     .pagedjs_page:last-of-type {

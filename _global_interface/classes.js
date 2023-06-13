@@ -52,12 +52,12 @@ class Calque {
     createPageElem() {
         this.pageElem = document.createElement("div");
         this.pageElem.classList.add("calqueElem");
-        // this.pageElem.style.zIndex =
+        
         this.pageElem.name = this.calqueIndex;
         // this.pageElem.innerHTML = "calque" + this.calqueIndex;
         
         // pour édition critérium
-        this.pageElem.innerHTML = "pt "+ ptNbr;
+        this.pageElem.innerHTML = "this is editable text";
         
         this.pageElem.contentEditable = true;
 
@@ -107,9 +107,7 @@ class CalqueStyle {
         }
 
         this.uiStyleDomElem;
-
         this.position = "absolute";
-
         this.createDomElem();
     }
     createDomElem() {
@@ -164,106 +162,11 @@ class textHandle {
 
 let txtHandle = new textHandle();
 
-
-
 let listCnv = [];
 let save = 0;
 
 let sketchIndex = 1;
 let grphc, showCanvas = true;
-
-const sketch_1 = p => {
-
-    let wCanvas = 463;
-    let hCanvas = 655;
-
-    let skIndex = sketchIndex;
-    p.randomSeed(1)
-    class floorBoxe {
-        constructor(x, y, scale, speed, height) {
-            this.x = p.random() * wCanvas + x;
-            this.y = y;
-            this.scale = scale;
-            this.speed = p.random() * 5 + speed;
-            this.height = height;
-            this.r = Math.floor(p.random() * 255);
-            this.g = Math.floor(p.random() * 255);
-            this.b = Math.floor(p.random() * 255);
-            this.acc = 1.02;
-        }
-        show() {
-            // p.randomSeed(100)
-            p.push();
-            p.translate(this.x, this.y);
-            p.scale(this.scale);
-            p.stroke(p.color("orange"));
-            p.strokeWeight(2);
-            p.fill(255, 0, 0);
-            p.square(0, 0, this.height);
-            p.pop();
-            if (this.y >= hCanvas) {
-                this.y = -20;
-                // this.acc = 1.006;
-                this.speed = p.random() * 50;
-            }
-            this.y += this.speed;
-            this.speed = this.speed * this.acc;
-            // this.acc += 0.01;
-        }
-    }
-
-    let boxes = [];
-    for (let i = 0; i < 20; i++) {
-        boxes.push(new floorBoxe(0, 0, 1, 10, 50));
-    }
-
-    function showBoxes() {
-        for (let i = 0; i < boxes.length; i++) {
-            boxes[i].show();
-        }
-    }
-
-    let doShowBoxes = false;
-    setTimeout(() => { doShowBoxes = true }, 500);
-
-    let cnv;
-
-    p.setup = function () {
-        cnv = p.createCanvas(wCanvas, hCanvas);
-        p.pixelDensity(offPixelDensity)
-    };
-
-    p.draw = function () {
-        p.background(0);
-
-        if (doShowBoxes) {
-            showBoxes();
-        }
-
-        if (!showCanvas) stopCanvas()
-        else playCanvas();
-
-    };
-
-    addEventListener("keydown", (e) => {
-        // console.log(e.key);
-        if (e.key == "&" && skIndex == 2) {
-            showPrintImage(cnv.canvas);
-        }
-        if(e.key == "é") playCanvas()
-    })
-
-    function stopCanvas() {
-        p.noLoop()
-    }
-    
-    function playCanvas() {
-        p.loop();
-    }
-
-};
-
-let sketches = [];
 
 
 
