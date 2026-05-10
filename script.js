@@ -133,7 +133,15 @@ window.onload = function () {
 
         // load scripts for interface 
         let scripts = []
-        let paths = ["./_global_interface/classes.js", "./_global_interface/criterium.js", "./_global_interface/gamepadSketch.js", "./_global_interface/webcam.js","./_global_interface/gui.js"]
+        let paths = [
+            // utils.js must be first — provides financial(), getRandomArbitrary(), wrapIndex()
+            "./_global_interface/utils.js",
+            "./_global_interface/classes.js",
+            "./_global_interface/criterium.js",
+            "./_global_interface/gamepadSketch.js",
+            "./_global_interface/webcam.js",
+            "./_global_interface/gui.js",
+        ]
 
         for (let i = 0; i < paths.length; i++) {
             let newScript = document.createElement('script')

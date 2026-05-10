@@ -148,9 +148,7 @@ function updateDisplayPosition(newX, newY) {
 }
 
 
-function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
-}
+// getRandomArbitrary() moved to utils.js
 
 let last_ft_family = 'arial';
 
@@ -463,9 +461,7 @@ function colorSelectedTag(tag) {
     tag.classList.add("active_calque_tag");
 }
 
-function financial(x) {
-    return Number.parseFloat(x).toFixed(1);
-}
+// financial() moved to utils.js
 
 
 
