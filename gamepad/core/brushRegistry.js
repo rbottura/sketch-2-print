@@ -1,146 +1,103 @@
 /**
- * brushRegistry.js
- * Central registry for all brush sprite families.
- * Loads once at app startup; all panels and sketches read from this singleton.
- * Paths are relative to gamepad/index.html (i.e., one level up for assets).
+ * brushRegistry.js  (manifest-driven version)
+ *
+ * All family/file knowledge comes from brush-manifest.json.
+ * Only the families the user selects in the BrushSelector are loaded.
+ *
+ * Public API
+ * ──────────────────────────────────────────────────────────────────────────────
+ *  loadManifest()                 → Promise<manifest>
+ *  preloadSelected(p, ids)        → call inside p5.preload()
+ *  isLoaded()                     → bool
+ *  getSprite(familyId, fileIndex) → p5.Image | null
+ *  getSpriteUrl(familyId, idx)    → string  (usable as <img src>)
+ *  familyCount()                  → number  (selected families only)
+ *  spriteCount(familyId)          → number
+ *  familyMeta(familyId)           → manifest family object | null
+ *  allFamilyMetas()               → array of selected family meta objects
  */
 
-export const BRUSH_FAMILIES = [
-  {
-    id: 'Ps_pink',
-    label: 'Peace Sans — Pink',
-    path: '../gamepad_sprites/PeaceSans/Ps_pink/',
-    ext: 'png',
-    count: 58,
-    color: '#ff6eb4',
-  },
-  {
-    id: 'Garam_blue',
-    label: 'Garamond — Blue',
-    path: '../gamepad_sprites/GaramondI/Garam_blue/',
-    ext: 'png',
-    count: 58,
-    color: '#4fc3f7',
-  },
-  {
-    id: 'Garam_pink',
-    label: 'Garamond — Pink',
-    path: '../gamepad_sprites/GaramondI/Garam_pink/',
-    ext: 'png',
-    count: 58,
-    color: '#f48fb1',
-  },
-  {
-    id: 'Garam_bw',
-    label: 'Garamond — B&W',
-    path: '../gamepad_sprites/GaramondI/Garam_bw_small/',
-    ext: 'png',
-    count: 58,
-    color: '#cfd8dc',
-  },
-  {
-    id: 'Raleway_green',
-    label: 'Raleway — Green',
-    path: '../gamepad_sprites/Raleway/Raleway_green/',
-    ext: 'png',
-    count: 78,
-    color: '#a5d6a7',
-  },
-  {
-    id: 'timbres',
-    label: 'Timbres',
-    path: '../gamepad_sprites/timbre/timbre',
-    ext: 'jpeg',
-    count: 8,
-    startIndex: 1,   // files are 1-indexed
-    color: '#ffcc80',
-    customPath: true, // path is a prefix, not a folder
-  },
-  {
-    id: 'fleurs',
-    label: 'Fleurs',
-    path: '../gamepad_sprites/fleurs/',
-    ext: 'png',
-    count: 11,
-    color: '#ce93d8',
-  },
-  {
-    id: 'Destra_yellow',
-    label: 'Destra — Yellow',
-    path: '../gamepad_sprites/Destra/Destra_yellow/',
-    ext: 'png',
-    count: 78,
-    color: '#fff176',
-  },
-  {
-    id: 'Minipax_white',
-    label: 'Minipax — White',
-    path: '../gamepad_sprites/Minipax/minipax_white/',
-    ext: 'png',
-    count: 78,
-    color: '#f5f5f5',
-  },
-  {
-    id: 'brushes',
-    label: 'Brushes',
-    path: '../gamepad_sprites/brushes/sprite(',
-    ext: 'png',
-    count: 59,
-    startIndex: 1,
-    customPath: true, // prefix + index + ').' + ext
-    closingParen: true,
-    color: '#80cbc4',
-  },
-];
+// ─── Internal state ───────────────────────────────────────────────────────────
 
-/** Returns the URL for a specific sprite (index is 0-based internally). */
-export function getSpriteUrl(familyIndex, spriteIndex) {
-  const fam = BRUSH_FAMILIES[familyIndex];
-  if (!fam) return null;
+let _manifest      = null;        // full manifest JSON
+let _selected      = [];          // family meta objects chosen by the user
+let _sprites       = new Map();   // familyId → p5.Image[]
+let _loaded        = false;
 
-  const start = fam.startIndex ?? 0;
-  const i = start + spriteIndex;
+// ─── Public API ───────────────────────────────────────────────────────────────
 
-  if (fam.customPath) {
-    const closing = fam.closingParen ? ')' : '';
-    return `${fam.path}${i}${closing}.${fam.ext}`;
-  }
-  return `${fam.path}${i}.${fam.ext}`;
+/**
+ * Fetch the manifest from the server.
+ * @returns {Promise<Object>} the full manifest JSON
+ */
+export async function loadManifest() {
+  if (_manifest) return _manifest;
+  const res = await fetch('brush-manifest.json');
+  if (!res.ok) throw new Error(`Failed to load brush-manifest.json: ${res.status}`);
+  _manifest = await res.json();
+  return _manifest;
+}
+
+/** Return all family entries from the manifest (for the selector UI). */
+export function allManifestFamilies() {
+  return _manifest?.families ?? [];
 }
 
 /**
- * Loaded sprite arrays. Populated by preloadAll().
- * families[familyIndex] = p5.Image[]
+ * Set which families to load. Call BEFORE preloadSelected().
+ * @param {string[]} ids  — family id strings (from manifest)
  */
-export const families = [];
-
-let _loaded = false;
+export function setSelectedFamilies(ids) {
+  if (!_manifest) throw new Error('Call loadManifest() first');
+  const idSet = new Set(ids);
+  _selected = _manifest.families.filter(f => idSet.has(f.id));
+  _sprites  = new Map();
+  _loaded   = false;
+}
 
 /**
- * Called inside p5.preload(). Loads all sprites into families[].
- * @param {p5} p — the p5 instance
+ * Load all sprites for selected families. Call inside p5.preload().
+ * @param {p5} p
  */
-export function preloadAll(p) {
-  for (let fi = 0; fi < BRUSH_FAMILIES.length; fi++) {
-    const fam = BRUSH_FAMILIES[fi];
-    families[fi] = [];
-    const start = fam.startIndex ?? 0;
-
-    for (let si = 0; si < fam.count; si++) {
-      const url = getSpriteUrl(fi, si);
-      families[fi].push(p.loadImage(url));
+export function preloadSelected(p) {
+  for (const fam of _selected) {
+    const imgs = [];
+    for (const file of fam.files) {
+      imgs.push(p.loadImage(`${fam.path}/${file}`));
     }
+    _sprites.set(fam.id, imgs);
   }
+  // p5 preload tracks async calls automatically; mark as loaded at draw-time
+  // (we can't synchronously know when all loadImage calls resolved here)
   _loaded = true;
 }
 
 export function isLoaded() { return _loaded; }
 
-/** Returns a specific p5.Image, or null. */
-export function getSprite(familyIndex, spriteIndex) {
-  return families[familyIndex]?.[spriteIndex] ?? null;
+/** Get a loaded p5.Image. */
+export function getSprite(familyId, fileIndex) {
+  return _sprites.get(familyId)?.[fileIndex] ?? null;
 }
 
-export function familyCount() { return BRUSH_FAMILIES.length; }
-export function spriteCount(familyIndex) { return BRUSH_FAMILIES[familyIndex]?.count ?? 0; }
-export function familyMeta(familyIndex) { return BRUSH_FAMILIES[familyIndex] ?? null; }
+/** Get the URL for an image (works before or after load — usable in <img>). */
+export function getSpriteUrl(familyId, fileIndex) {
+  const fam = _selected.find(f => f.id === familyId) ??
+              _manifest?.families.find(f => f.id === familyId);
+  if (!fam || fileIndex < 0 || fileIndex >= fam.files.length) return '';
+  return `${fam.path}/${fam.files[fileIndex]}`;
+}
+
+/** Get URL using the family's index position in _selected (for legacy callers). */
+export function getSpriteUrlByIndex(familyIndex, fileIndex) {
+  const fam = _selected[familyIndex];
+  if (!fam) return '';
+  return getSpriteUrl(fam.id, fileIndex);
+}
+
+export function familyCount()            { return _selected.length; }
+export function spriteCount(familyId)    { return _sprites.get(familyId)?.length ?? _selected.find(f => f.id === familyId)?.count ?? 0; }
+export function spriteCountByIndex(i)    { return _selected[i] ? spriteCount(_selected[i].id) : 0; }
+export function familyMeta(familyId)     { return _selected.find(f => f.id === familyId) ?? null; }
+export function familyMetaByIndex(i)     { return _selected[i] ?? null; }
+export function allFamilyMetas()         { return _selected; }
+export function familyIdByIndex(i)       { return _selected[i]?.id ?? null; }

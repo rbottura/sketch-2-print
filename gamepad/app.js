@@ -18,14 +18,42 @@ import { createSketch,
          familyIndex, spriteIndex, patternIndex }
        from './sketch/gamepadSketch.js';
 
-// ── Create sketch container ──────────────────────────────────────────────────
-const container = document.getElementById('sketch-container');
-const sketchInstance = createSketch(container);
+import { BrushSelector }       from './ui/BrushSelector.js';
 
-// ── Create UI panels ─────────────────────────────────────────────────────────
-const brushPanel   = new BrushPanel();
-const paramPanel   = new ParamPanel();
-const galleryPanel = new GalleryPanel();
+// ── Boot sequence ────────────────────────────────────────────────────────────
+
+async function boot() {
+  try {
+    // 1. Load manifest
+    const manifest = await BrushRegistry.loadManifest();
+
+    // 2. Prompt user to select libraries
+    const selector = new BrushSelector(manifest);
+    const selectedIds = await selector.prompt();
+
+    // 3. Configure registry
+    BrushRegistry.setSelectedFamilies(selectedIds);
+
+    // 4. Start sketch
+    const container = document.getElementById('sketch-container');
+    const sketchInstance = createSketch(container);
+
+    // 5. Create UI panels
+    const brushPanel   = new BrushPanel();
+    const paramPanel   = new ParamPanel();
+    const galleryPanel = new GalleryPanel();
+
+    // 6. Setup status bar
+    _buildStatusBar();
+    setTimeout(_updateStatusBar, 100);
+
+  } catch (err) {
+    console.error('Failed to boot GamepadDraw:', err);
+    document.body.innerHTML = `<div style="color:red;padding:20px;font-family:monospace">Fatal Error: ${err.message}</div>`;
+  }
+}
+
+boot();
 
 // ── Wire cross-module events ─────────────────────────────────────────────────
 
@@ -53,10 +81,9 @@ document.addEventListener('sketch:patternChanged', () => {
 });
 
 // ── Status bar (always-visible HUD strip at bottom-left) ─────────────────────
-const statusBar = _buildStatusBar();
 
 function _updateStatusBar() {
-  const fam  = BrushRegistry.familyMeta(familyIndex);
+  const fam  = BrushRegistry.familyMetaByIndex(familyIndex);
   if (!fam) return;
 
   const patternLabel = document.getElementById('sb-pattern');
@@ -72,9 +99,6 @@ function _updateStatusBar() {
 
 document.addEventListener('imagestore:saved',   _updateStatusBar);
 document.addEventListener('imagestore:removed', _updateStatusBar);
-
-// Initial render
-setTimeout(_updateStatusBar, 100);
 
 // ── Keyboard shortcuts overlay (help) ────────────────────────────────────────
 document.addEventListener('keydown', e => {

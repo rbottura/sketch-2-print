@@ -159,7 +159,7 @@ export class BrushPanel {
 
   _navigate(dir) {
     const famCount = BrushRegistry.familyCount();
-    const sprCount = BrushRegistry.spriteCount(this._familyIndex);
+    const sprCount = BrushRegistry.spriteCountByIndex(this._familyIndex);
 
     switch (dir) {
       case 'up':
@@ -191,7 +191,7 @@ export class BrushPanel {
   // ── Render ────────────────────────────────────────────────────────────────────
 
   _refresh() {
-    const meta = BrushRegistry.familyMeta(this._familyIndex);
+    const meta = BrushRegistry.familyMetaByIndex(this._familyIndex);
     if (!meta) return;
 
     // Family header
@@ -208,7 +208,7 @@ export class BrushPanel {
     const end    = Math.min(total, start + VISIBLE_SPRITES);
 
     for (let i = start; i < end; i++) {
-      const url  = BrushRegistry.getSpriteUrl(this._familyIndex, i);
+      const url  = BrushRegistry.getSpriteUrlByIndex(this._familyIndex, i);
       const tile = document.createElement('div');
       tile.className = 'bp-sprite-tile';
       tile.dataset.index = i;
@@ -223,7 +223,7 @@ export class BrushPanel {
     }
 
     // Large preview
-    const previewUrl = BrushRegistry.getSpriteUrl(this._familyIndex, this._spriteIndex);
+    const previewUrl = BrushRegistry.getSpriteUrlByIndex(this._familyIndex, this._spriteIndex);
     this._previewEl.src = previewUrl;
     this._spriteLabel.textContent =
       `#${this._spriteIndex + 1} of ${total}`;

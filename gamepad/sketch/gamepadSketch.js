@@ -46,7 +46,7 @@ export function createSketch(container) {
 
     // ── preload ───────────────────────────────────────────────────────────────
     sketch.preload = () => {
-      BrushRegistry.preloadAll(sketch);
+      BrushRegistry.preloadSelected(sketch);
     };
 
     // ── setup ─────────────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ export function createSketch(container) {
         sketch.width  / 2,
         sketch.height / 2,
         1,
-        BrushRegistry.getSprite(familyIndex, spriteIndex),
+        BrushRegistry.getSprite(BrushRegistry.familyIdByIndex(familyIndex), spriteIndex),
         _overlay,
         sketch.width,
         sketch.height
@@ -200,7 +200,7 @@ function _step(type, dir) {
 
 function _syncBrush() {
   if (!_joyImg) return;
-  _joyImg.img     = BrushRegistry.getSprite(familyIndex, spriteIndex);
+  _joyImg.img     = BrushRegistry.getSprite(BrushRegistry.familyIdByIndex(familyIndex), spriteIndex);
   _joyImg.pattern = PATTERNS[patternIndex];
 }
 
@@ -211,7 +211,7 @@ function _clearOverlay() {
 
 function _saveImage() {
   if (!_overlay) return;
-  ImageStore.save(_overlay.canvas, BrushRegistry.familyMeta(familyIndex)?.label);
+  ImageStore.save(_overlay.canvas, BrushRegistry.familyMetaByIndex(familyIndex)?.label);
 }
 
 function _getActiveGamepad() {
