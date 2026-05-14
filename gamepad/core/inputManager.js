@@ -46,6 +46,8 @@ let _mode = MODE.DRAW;
 const _listeners = {};       // action → [fn, ...]
 const _prevButtons = [];     // debounce: was button down last frame?
 
+let _drawBlockUntilAUp = false; // prevents 'A' bleed-through after closing a panel
+
 // Axis dead-zone
 const DEAD_ZONE = 0.12;
 
@@ -60,6 +62,9 @@ export const InputManager = {
   get mode() { return _mode; },
 
   setMode(m) {
+    if (m === MODE.DRAW && _mode !== MODE.DRAW) {
+      _drawBlockUntilAUp = true;
+    }
     _mode = m;
     _emit('modeChange', m);
   },
@@ -90,7 +95,11 @@ export const InputManager = {
       if (ax !== 0 || ay !== 0) _emit('move', { ax, ay });
 
       // ── Continuous stamp while A (button 0) is held ──
-      if (buttons[0]?.pressed || (buttons[0]?.value ?? 0) > 0.5) {
+      const aPressed = buttons[0]?.pressed || (buttons[0]?.value ?? 0) > 0.5;
+      if (_drawBlockUntilAUp && !aPressed) {
+        _drawBlockUntilAUp = false;
+      }
+      if (aPressed && !_drawBlockUntilAUp) {
         _emit('stamp', {});
       }
 
@@ -200,6 +209,13 @@ function _panelButton(i, panel) {
 
   // Confirm
   if (i === 0) return _emit('panelConfirm', { panel });
+
+  // Gallery specific actions
+  if (panel === 'gallery') {
+    if (i === 2) return _emit('galleryDownload', {}); // X
+    if (i === 3) return _emit('galleryDelete', {});   // Y
+    if (i === 9) return _emit('galleryLoad', {});     // Start
+  }
 }
 
 function _deadZone(v) {

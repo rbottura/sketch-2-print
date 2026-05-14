@@ -72,13 +72,14 @@ export class GalleryPanel {
       <div class="gallery-info" id="gp-info">—</div>
 
       <div class="gallery-actions">
+        <button class="gp-action-btn" id="gp-load" title="Load to Canvas [Start]">⬆ Load</button>
         <button class="gp-action-btn" id="gp-dl"  title="Download [X]">⬇ Download</button>
         <button class="gp-action-btn" id="gp-del" title="Delete [Y]">✕ Delete</button>
         <button class="gp-action-btn" id="gp-all" title="Download All">⬇ All</button>
       </div>
 
       <div class="hud-panel__footer">
-        <span class="hud-hint hud-hint--dpad">⬅➡ navigate &nbsp;·&nbsp; A preview &nbsp;·&nbsp; X download &nbsp;·&nbsp; Y delete</span>
+        <span class="hud-hint hud-hint--dpad">⬅➡ nav &nbsp;·&nbsp; A preview &nbsp;·&nbsp; X down &nbsp;·&nbsp; Y del &nbsp;·&nbsp; Start load</span>
       </div>
     `;
 
@@ -89,6 +90,7 @@ export class GalleryPanel {
 
     this._el.querySelector('#gp-prev').addEventListener('click', () => this._navigate('left'));
     this._el.querySelector('#gp-next').addEventListener('click', () => this._navigate('right'));
+    this._el.querySelector('#gp-load').addEventListener('click', () => this._loadToCanvas());
     this._el.querySelector('#gp-dl').addEventListener('click',   () => this._download());
     this._el.querySelector('#gp-del').addEventListener('click',  () => this._delete());
     this._el.querySelector('#gp-all').addEventListener('click',  () => ImageStore.downloadAll());
@@ -113,6 +115,10 @@ export class GalleryPanel {
       if (panel !== 'gallery' && !this._visible) return;
       this.hide();
     });
+
+    InputManager.on('galleryDownload', () => { if (this._visible) this._download(); });
+    InputManager.on('galleryDelete',   () => { if (this._visible) this._delete(); });
+    InputManager.on('galleryLoad',     () => { if (this._visible) this._loadToCanvas(); });
 
     document.addEventListener('ui:toggleGallery', () => this.toggle());
 
@@ -157,6 +163,13 @@ export class GalleryPanel {
     if (!entry) return;
     const win = window.open('', '_blank');
     win.document.write(`<img src="${entry.dataUrl}" style="max-width:100%;max-height:100vh">`);
+  }
+
+  _loadToCanvas() {
+    const entry = ImageStore.get(this._active);
+    if (!entry) return;
+    document.dispatchEvent(new CustomEvent('gallery:loadToCanvas', { detail: { url: entry.dataUrl } }));
+    this.hide();
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────

@@ -16,6 +16,7 @@ export const params = {
   scaleSpeed:     0.006,
   scaleMin:       0.05,
   scaleMax:       8,
+  refOpacity:     0.5,
 };
 
 // ─── State shared with UI panels (via App) ────────────────────────────────────
@@ -33,6 +34,7 @@ let _overlay;     // p5.Graphics — permanent ink layer
 let _joyImg;      // JoyImage cursor
 let _rotVal = 0;
 let _scaleVal = 1;
+let _referenceImg = null;
 
 export function getOverlayCanvas() {
   return _overlay?.canvas ?? null;
@@ -55,7 +57,7 @@ export function createSketch(container) {
       sketch.pixelDensity(window.devicePixelRatio || 1);
 
       _overlay = sketch.createGraphics(sketch.width, sketch.height);
-      _overlay.background(255);
+      _overlay.clear();
 
       _joyImg = new JoyImage(
         sketch.width  / 2,
@@ -74,7 +76,7 @@ export function createSketch(container) {
       window.addEventListener('resize', () => {
         sketch.resizeCanvas(window.innerWidth, window.innerHeight);
         const newOverlay = sketch.createGraphics(sketch.width, sketch.height);
-        newOverlay.background(255);
+        newOverlay.clear();
         newOverlay.image(_overlay, 0, 0);
         _overlay = newOverlay;
         _joyImg.setTarget(_overlay, sketch.width, sketch.height);
@@ -83,7 +85,20 @@ export function createSketch(container) {
 
     // ── draw ──────────────────────────────────────────────────────────────────
     sketch.draw = () => {
-      sketch.clear();
+      sketch.background(255); // Solid white base
+
+      // Draw reference image behind the overlay
+      if (_referenceImg && params.refOpacity > 0) {
+        sketch.push();
+        sketch.tint(255, params.refOpacity * 255);
+        sketch.imageMode(sketch.CENTER);
+        // "Contain" scaling
+        const s = Math.min(sketch.width / _referenceImg.width, sketch.height / _referenceImg.height);
+        const dw = _referenceImg.width * s;
+        const dh = _referenceImg.height * s;
+        sketch.image(_referenceImg, sketch.width / 2, sketch.height / 2, dw, dh);
+        sketch.pop();
+      }
 
       // Draw the permanent ink layer
       sketch.push();
@@ -116,6 +131,23 @@ export function createSketch(container) {
 
     // parampanel:clearCanvas → wipe the overlay
     document.addEventListener('parampanel:clearCanvas', _clearOverlay);
+
+    // Load reference image
+    document.addEventListener('parampanel:referenceLoaded', (e) => {
+      sketch.loadImage(e.detail.url, (img) => {
+        _referenceImg = img;
+      });
+    });
+
+    // Load back saved image to canvas
+    document.addEventListener('gallery:loadToCanvas', (e) => {
+      sketch.loadImage(e.detail.url, (img) => {
+        // Clear current overlay and draw the loaded image
+        _overlay.clear();
+        _overlay.imageMode(sketch.CORNER);
+        _overlay.image(img, 0, 0);
+      });
+    });
 
   }, container);
 
@@ -190,7 +222,7 @@ function _step(type, dir) {
     familyIndex = _wrap(familyIndex + dir, BrushRegistry.familyCount());
     spriteIndex = 0;
   } else {
-    spriteIndex = _wrap(spriteIndex + dir, BrushRegistry.spriteCount(familyIndex));
+    spriteIndex = _wrap(spriteIndex + dir, BrushRegistry.spriteCountByIndex(familyIndex));
   }
   _syncBrush();
   document.dispatchEvent(new CustomEvent('sketch:brushChanged', {
@@ -206,12 +238,17 @@ function _syncBrush() {
 
 function _clearOverlay() {
   if (!_overlay || !_p5) return;
-  _overlay.background(255);
+  _overlay.clear();
 }
 
 function _saveImage() {
-  if (!_overlay) return;
-  ImageStore.save(_overlay.canvas, BrushRegistry.familyMetaByIndex(familyIndex)?.label);
+  if (!_overlay || !_p5) return;
+  // Create a temporary graphics with a white background so saved image isn't transparent
+  const temp = _p5.createGraphics(_overlay.width, _overlay.height);
+  temp.background(255);
+  temp.image(_overlay, 0, 0);
+  ImageStore.save(temp.canvas, BrushRegistry.familyMetaByIndex(familyIndex)?.label);
+  temp.remove();
 }
 
 function _getActiveGamepad() {

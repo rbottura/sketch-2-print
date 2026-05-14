@@ -21,6 +21,7 @@ import { PATTERNS, PATTERN_LABELS } from '../core/joyImage.js';
 // Special action rows that appear above the numeric sliders
 const ACTION_ROWS = [
   { key: 'clearCanvas', label: 'Clear Canvas', icon: '⌫', color: '#ff2079' },
+  { key: 'loadReference', label: 'Load Reference', icon: '🖼️', color: '#00f5ff' },
 ];
 
 const PARAM_DEFS = [
@@ -50,6 +51,15 @@ const PARAM_DEFS = [
     max:    0.05,
     step:   0.001,
     format: v => v.toFixed(3),
+  },
+  {
+    key:    'refOpacity',
+    label:  'Ref Opacity',
+    icon:   '👁️',
+    min:    0,
+    max:    1,
+    step:   0.1,
+    format: v => `${Math.round(v * 100)}%`,
   },
 ];
 
@@ -113,6 +123,7 @@ export class ParamPanel {
       <div class="hud-panel__footer">
         <span class="hud-hint hud-hint--dpad">⬆⬇ select &nbsp;·&nbsp; ⬅➡ adjust</span>
       </div>
+      <input type="file" id="pp-file-input" accept="image/*" style="display:none" />
     `;
 
     // Action rows (e.g. Clear Canvas)
@@ -163,6 +174,16 @@ export class ParamPanel {
         this._refresh();
       });
       patternWrap.appendChild(btn);
+    });
+
+    this._fileInput = this._el.querySelector('#pp-file-input');
+    this._fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.dispatchEvent(new CustomEvent('parampanel:referenceLoaded', { detail: { url } }));
+      // Reset input so the same file can be loaded again if needed
+      e.target.value = '';
     });
 
     document.body.appendChild(this._el);
@@ -227,6 +248,8 @@ export class ParamPanel {
   _executeAction(key) {
     if (key === 'clearCanvas') {
       document.dispatchEvent(new CustomEvent('parampanel:clearCanvas'));
+    } else if (key === 'loadReference') {
+      this._fileInput.click();
     }
   }
 
