@@ -121,7 +121,7 @@ function _buildStatusBar() {
     <span class="sb-sep">·</span>
     <span class="sb-item sb-dim" id="sb-count">0 saved</span>
     <span class="sb-spacer"></span>
-    <a class="sb-item sb-link" href="gallery/index.html" target="_blank" rel="noopener">Gallery &#8599;</a>
+    <a class="sb-item sb-link" href="gallery/" target="_blank" rel="noopener">Gallery &#8599;</a>
     <span class="sb-sep">·</span>
     <span class="sb-item sb-dim">H = help</span>
   `;

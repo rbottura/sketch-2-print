@@ -417,6 +417,7 @@
 .gallery-arrow:hover { background: rgba(0,245,255,0.1); }
 
 .gp-thumb {
+  position: relative;
   width: 80px;
   height: 80px;
   flex-shrink: 0;
@@ -464,6 +465,7 @@
 
 .gallery-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
 }
@@ -480,6 +482,27 @@
   transition: background 150ms, color 150ms;
 }
 .gp-action-btn:hover { background: rgba(255,32,121,0.12); color: var(--hud-magenta); }
+.gp-action-btn[hidden] { display: none; }
+.gp-action-btn:disabled { opacity: 0.4; cursor: default; }
+.gp-action-btn:disabled:hover { background: var(--hud-glass); color: var(--hud-text); }
+.gp-action-btn--pub:hover:not(:disabled) {
+  background: rgba(0, 245, 255, 0.12);
+  color: var(--hud-cyan);
+}
+
+/* Session image that is already in the on-disk gallery */
+.gp-thumb--published::after {
+  content: '¹3';
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-family: var(--hud-font);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--hud-cyan);
+  text-shadow: 0 0 4px #000, 0 0 10px var(--hud-cyan);
+  pointer-events: none;
+}
 
 /* ── Saved badge (toast) ─────────────────────────────────────────────────────── */
 .gp-saved-badge {

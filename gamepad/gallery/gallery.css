@@ -147,6 +147,10 @@ body {
 
 /* ── Lightbox ───────────────────────────────────────────────────────────── */
 
+.g-lightbox[hidden] {
+  display: none;
+}
+
 .g-lightbox {
   position: fixed;
   inset: 0;

@@ -102,6 +102,9 @@ export const ImageStore = {
     _dispatch('imagestore:cleared', {});
   },
 
+  /** Canonical file name for an entry, shared by download and gallery publish. */
+  filename(entry) { return _filename(entry); },
+
   /**
    * Trigger a browser download for an entry.
    * @param {number} index

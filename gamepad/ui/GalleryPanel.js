@@ -11,6 +11,7 @@
 
 import { InputManager, MODE } from '../core/inputManager.js';
 import { ImageStore }          from '../core/imageStore.js';
+import { GalleryPublisher }    from '../core/galleryPublisher.js';
 
 export class GalleryPanel {
   constructor() {
@@ -19,6 +20,7 @@ export class GalleryPanel {
     this._info   = null;
     this._active = 0;
     this._visible = false;
+    this._pubState = new Map();   // entry.id -> already in the on-disk gallery
 
     this._build();
     this._wireEvents();
@@ -32,6 +34,7 @@ export class GalleryPanel {
     this._el.classList.add('hud-panel--visible');
     this._refresh();
     InputManager.setMode(MODE.GALLERY);
+    this._syncPublished();
   }
 
   hide() {
@@ -76,6 +79,8 @@ export class GalleryPanel {
         <button class="gp-action-btn" id="gp-dl"  title="Download [X]">⬇ Download</button>
         <button class="gp-action-btn" id="gp-del" title="Delete [Y]">✕ Delete</button>
         <button class="gp-action-btn" id="gp-all" title="Download All">⬇ All</button>
+        <button class="gp-action-btn gp-action-btn--pub" id="gp-pub" title="Add this image to the gallery" hidden>⇧ Publish</button>
+        <button class="gp-action-btn gp-action-btn--pub" id="gp-pub-all" title="Add every session image to the gallery" hidden>⇧ Publish all</button>
       </div>
 
       <div class="hud-panel__footer">
@@ -94,6 +99,8 @@ export class GalleryPanel {
     this._el.querySelector('#gp-dl').addEventListener('click',   () => this._download());
     this._el.querySelector('#gp-del').addEventListener('click',  () => this._delete());
     this._el.querySelector('#gp-all').addEventListener('click',  () => ImageStore.downloadAll());
+    this._el.querySelector('#gp-pub').addEventListener('click',  () => this._publish());
+    this._el.querySelector('#gp-pub-all').addEventListener('click', () => this._publishAll());
 
     document.body.appendChild(this._el);
   }
@@ -195,6 +202,7 @@ export class GalleryPanel {
     if (total === 0) {
       this._preview.src = '';
       this._info.textContent = 'No saved images yet. Press Start to save.';
+      this._syncPublishButtons();
       return;
     }
 
@@ -203,6 +211,7 @@ export class GalleryPanel {
       const tile = document.createElement('div');
       tile.className = 'gp-thumb';
       if (i === this._active) tile.classList.add('gp-thumb--active');
+      if (this._pubState.get(entry.id)) tile.classList.add('gp-thumb--published');
 
       const img = document.createElement('img');
       img.src = entry.url;
@@ -225,22 +234,100 @@ export class GalleryPanel {
     // Large preview
     const active = ImageStore.get(this._active);
     this._preview.src = active.url;
+    const published = this._pubState.get(active.id) === true;
     this._info.textContent =
-      `${active.label} · ${new Date(active.timestamp).toLocaleTimeString()}`;
+      `${active.label} · ${new Date(active.timestamp).toLocaleTimeString()}` +
+      (published ? ' · in gallery' : '');
+    this._syncPublishButtons();
+  }
+
+  // ── Publishing to the on-disk gallery ────────────────────────────
+
+  _syncPublishButtons() {
+    const pub = this._el.querySelector('#gp-pub');
+    const all = this._el.querySelector('#gp-pub-all');
+    const available = GalleryPublisher.available;
+
+    pub.hidden = all.hidden = !available;
+    if (!available) return;
+
+    const active    = ImageStore.get(this._active);
+    const published = active ? this._pubState.get(active.id) === true : false;
+
+    pub.disabled    = !active || published;
+    pub.textContent = published ? '✓ In gallery' : '⇧ Publish';
+    all.disabled    = ImageStore.count === 0;
+  }
+
+  /** Ask the server what it already has, then mark every session image. */
+  async _syncPublished() {
+    const available = await GalleryPublisher.refresh();
+    if (!available) {
+      this._pubState.clear();
+      this._syncPublishButtons();
+      return;
+    }
+    for (const entry of ImageStore.all) {
+      this._pubState.set(entry.id, (await GalleryPublisher.isPublished(entry)) === true);
+    }
+    if (this._visible) this._refresh();
+  }
+
+  async _publish() {
+    const entry = ImageStore.get(this._active);
+    if (!entry) return;
+
+    const result = await this._send(entry);
+    if (result.status !== 'error') {
+      this._flash(result.status === 'duplicate'
+        ? '✓ Already in gallery'
+        : `⇧ Published ${result.file}`);
+    }
+    this._refresh();
+  }
+
+  async _publishAll() {
+    const all = this._el.querySelector('#gp-pub-all');
+    all.disabled = true;
+
+    let added = 0, already = 0, failed = 0;
+    for (const entry of [...ImageStore.all]) {
+      if (this._pubState.get(entry.id) === true) { already++; continue; }
+      const result = await this._send(entry);
+      if      (result.status === 'added')     added++;
+      else if (result.status === 'duplicate') already++;
+      else                                    failed++;
+    }
+
+    all.disabled = false;
+    this._flash(
+      `⇧ ${added} added · ${already} already there` + (failed ? ` · ${failed} failed` : ''),
+      3000,
+    );
+    this._refresh();
+  }
+
+  async _send(entry) {
+    const result = await GalleryPublisher.publish(entry, ImageStore.filename(entry));
+    if (result.status === 'error') this._flash(`⚠ ${result.error}`, 3500);
+    else this._pubState.set(entry.id, true);
+    return result;
+  }
+
+  _flash(text, ms = 2000) {
+    const badge = document.getElementById('gp-saved-badge') || this._makeBadge();
+    badge.textContent = text;
+    badge.classList.add('gp-badge--flash');
+    clearTimeout(this._flashTimer);
+    this._flashTimer = setTimeout(() => badge.classList.remove('gp-badge--flash'), ms);
   }
 
   _flashSavedBadge() {
-    const badge = document.getElementById('gp-saved-badge') || this._makeBadge();
-    badge.textContent = `✓ Saved (${ImageStore.count})`;
-    badge.classList.add('gp-badge--flash');
-    setTimeout(() => badge.classList.remove('gp-badge--flash'), 2000);
+    this._flash(`✓ Saved (${ImageStore.count})`);
   }
 
   _flashRestoredBadge(count) {
-    const badge = document.getElementById('gp-saved-badge') || this._makeBadge();
-    badge.textContent = `↻ ${count} image${count !== 1 ? 's' : ''} restored`;
-    badge.classList.add('gp-badge--flash');
-    setTimeout(() => badge.classList.remove('gp-badge--flash'), 2500);
+    this._flash(`↻ ${count} image${count !== 1 ? 's' : ''} restored`, 2500);
   }
 
   _makeBadge() {
