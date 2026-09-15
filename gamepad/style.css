@@ -59,6 +59,12 @@ body {
 .sb-dim  { color: rgba(160, 184, 204, 0.5); }
 .sb-sep  { color: rgba(0, 245, 255, 0.3); }
 .sb-spacer { flex: 1; }
+.sb-link {
+  color: rgba(0, 245, 255, 0.7);
+  text-decoration: none;
+  transition: color 160ms;
+}
+.sb-link:hover { color: var(--hud-cyan, #00f5ff); }
 
 /* ── Help overlay ────────────────────────────────────────────────────────────── */
 .help-overlay {

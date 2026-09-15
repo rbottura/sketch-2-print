@@ -247,7 +247,8 @@ function _saveImage() {
   const temp = _p5.createGraphics(_overlay.width, _overlay.height);
   temp.background(255);
   temp.image(_overlay, 0, 0);
-  ImageStore.save(temp.canvas, BrushRegistry.familyMetaByIndex(familyIndex)?.label);
+  ImageStore.save(temp.canvas, BrushRegistry.familyMetaByIndex(familyIndex)?.label)
+            .catch(err => console.error('[sketch] Save failed:', err));
   temp.remove();
 }
 

@@ -139,6 +139,18 @@ export class GalleryPanel {
         this._refresh();
       }
     });
+
+    // Images restored from IndexedDB on page load
+    document.addEventListener('imagestore:hydrated', e => {
+      this._active = Math.max(0, ImageStore.count - 1);
+      if (this._visible) this._refresh();
+      else if (e.detail.count > 0) this._flashRestoredBadge(e.detail.count);
+    });
+
+    document.addEventListener('imagestore:cleared', () => {
+      this._active = 0;
+      if (this._visible) this._refresh();
+    });
   }
 
   // ── Navigation ───────────────────────────────────────────────────────────────
@@ -162,13 +174,13 @@ export class GalleryPanel {
     const entry = ImageStore.get(this._active);
     if (!entry) return;
     const win = window.open('', '_blank');
-    win.document.write(`<img src="${entry.dataUrl}" style="max-width:100%;max-height:100vh">`);
+    win.document.write(`<img src="${entry.url}" style="max-width:100%;max-height:100vh">`);
   }
 
   _loadToCanvas() {
     const entry = ImageStore.get(this._active);
     if (!entry) return;
-    document.dispatchEvent(new CustomEvent('gallery:loadToCanvas', { detail: { url: entry.dataUrl } }));
+    document.dispatchEvent(new CustomEvent('gallery:loadToCanvas', { detail: { url: entry.url } }));
     this.hide();
   }
 
@@ -193,7 +205,7 @@ export class GalleryPanel {
       if (i === this._active) tile.classList.add('gp-thumb--active');
 
       const img = document.createElement('img');
-      img.src = entry.dataUrl;
+      img.src = entry.url;
       img.alt = entry.label;
       img.addEventListener('click', () => {
         this._active = i;
@@ -212,7 +224,7 @@ export class GalleryPanel {
 
     // Large preview
     const active = ImageStore.get(this._active);
-    this._preview.src = active.dataUrl;
+    this._preview.src = active.url;
     this._info.textContent =
       `${active.label} · ${new Date(active.timestamp).toLocaleTimeString()}`;
   }
@@ -222,6 +234,13 @@ export class GalleryPanel {
     badge.textContent = `✓ Saved (${ImageStore.count})`;
     badge.classList.add('gp-badge--flash');
     setTimeout(() => badge.classList.remove('gp-badge--flash'), 2000);
+  }
+
+  _flashRestoredBadge(count) {
+    const badge = document.getElementById('gp-saved-badge') || this._makeBadge();
+    badge.textContent = `↻ ${count} image${count !== 1 ? 's' : ''} restored`;
+    badge.classList.add('gp-badge--flash');
+    setTimeout(() => badge.classList.remove('gp-badge--flash'), 2500);
   }
 
   _makeBadge() {

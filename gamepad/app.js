@@ -43,7 +43,10 @@ async function boot() {
     const paramPanel   = new ParamPanel();
     const galleryPanel = new GalleryPanel();
 
-    // 6. Setup status bar
+    // 6. Restore previously saved images from IndexedDB
+    await ImageStore.ready;
+
+    // 7. Setup status bar
     _buildStatusBar();
     setTimeout(_updateStatusBar, 100);
 
@@ -99,6 +102,8 @@ function _updateStatusBar() {
 
 document.addEventListener('imagestore:saved',   _updateStatusBar);
 document.addEventListener('imagestore:removed', _updateStatusBar);
+document.addEventListener('imagestore:cleared',  _updateStatusBar);
+document.addEventListener('imagestore:hydrated', _updateStatusBar);
 
 // ── Keyboard shortcuts overlay (help) ────────────────────────────────────────
 document.addEventListener('keydown', e => {
@@ -116,6 +121,8 @@ function _buildStatusBar() {
     <span class="sb-sep">·</span>
     <span class="sb-item sb-dim" id="sb-count">0 saved</span>
     <span class="sb-spacer"></span>
+    <a class="sb-item sb-link" href="gallery/index.html" target="_blank" rel="noopener">Gallery &#8599;</a>
+    <span class="sb-sep">·</span>
     <span class="sb-item sb-dim">H = help</span>
   `;
   document.body.appendChild(bar);

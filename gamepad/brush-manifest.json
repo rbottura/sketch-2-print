@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-13T19:02:26.050Z",
+  "generated": "2026-08-28T14:23:57.386Z",
   "spritesRoot": "gamepad_sprites",
   "families": [
     {
@@ -634,9 +634,10 @@
         "sprite(57).png",
         "sprite(58).png",
         "sprite(59).png",
-        "sprite(60).png"
+        "sprite(60).png",
+        "sprite(61).png"
       ],
-      "count": 60,
+      "count": 61,
       "preview": "sprite(1).png"
     },
     {
